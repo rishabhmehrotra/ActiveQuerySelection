@@ -17,6 +17,8 @@ public class Driver {
 		System.out.println("Total No of queries= "+d.nQ);
 		System.out.println("Total no of queries in Base Set= "+d.base.size());
 		
+		populateQueryTermsToLDAFile();
+		
 		int N = 100;
 		
 		int i,j,k,l,m;
@@ -156,6 +158,26 @@ public class Driver {
 		}
 		d.resultRandom = sumRandom/5;*/
 		System.out.println("Final Results: Random: "+d.resultRandom+" Candidates: "+d.resultCandidates);
+	}
+	
+	public static void populateQueryTermsToLDAFile() throws IOException
+	{
+		int c =0;
+		FileWriter fstream = new FileWriter("src/data/queriesForLDA");
+		BufferedWriter out = new BufferedWriter(fstream);
+		for (String key : d.queryTerms.keySet()) {
+			HashMap<String, Float> map = d.queryTerms.get(key);
+			for(String words: map.keySet())
+			{
+				Float size = map.get(words);
+				for(int i=1;i<=size;i++)
+				{
+					c++;out.write(words+" ");
+				}
+			}
+			out.write("\n");
+		}
+		System.out.println(c);
 	}
 	
 	public static void populateRandomQueries() throws IOException

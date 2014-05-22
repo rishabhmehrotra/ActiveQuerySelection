@@ -89,7 +89,7 @@ public class RunTestingAlgorithm {
 					// new query found
 					//first add previous query to the list of queries in the dataset
 					//listOfCandidateQueries[nTQ++] = q;
-					listTestQueries.add(q);
+					if(q.qID!=0) listTestQueries.add(q);
 					nTQ++;
 					c+=q.nD;
 					q = new Query();
@@ -117,6 +117,7 @@ public class RunTestingAlgorithm {
 	
 	public void computeNDCG() throws IOException
 	{
+		int thresNDGC = 10;
 		// sort the documents for each query in base
 		double avgNDCG=0.0;
 		int totalCount=0;
@@ -137,31 +138,53 @@ public class RunTestingAlgorithm {
 						}
 					  
 					});
-			// now we have the documents for this query sorted
-			//System.out.print("qID:"+q.qID+"___");
-			Iterator<Document> itr2 = q.listOfDocuments.iterator();
+			Iterator<Document> itr3 = q.listOfDocuments.iterator();
 			int count = 0, count0 = 0, count1 = 0, count2 = 0;
-			double DCG=0.0, IDCG=0.0;
-			while(itr2.hasNext()){
-				Document d = itr2.next();
+			while(itr3.hasNext())
+			{
+				Document d = itr3.next();
 				if(d.relevance == 0) count0++;
 				if(d.relevance == 1) count1++;
 				if(d.relevance == 2) count2++;
+			}
+			// now we have the documents for this query sorted
+			//System.out.print("qID:"+q.qID+"___");
+			Iterator<Document> itr2 = q.listOfDocuments.iterator();
+			double DCG=0.0, IDCG=0.0;
+			while(itr2.hasNext()){
+				Document d = itr2.next();
 				count++;
-				if(count==1) {DCG+= d.relevance;IDCG+= d.relevance;}
+				if(count==1) {DCG+= d.relevance;/*IDCG+= d.relevance;*/System.out.print("__dcg+="+d.relevance+"with score:"+d.testScore);}
 				else
 				{
 					DCG+= (d.relevance/Math.log(count));
+					System.out.print("  dcg+= "+d.relevance+"/Math.log "+count+"with score:"+d.testScore);
 				}
 				//System.out.print(d.relevance+" ~ "+d.testScore+"_______");
-				if(count == 10) break;
+				if(count == thresNDGC) break;
 			}
+			System.out.println("0s: "+count0+"1s: "+count1+"___2s: "+count2);
 			//calculate IDCG now
-			int c = 2;
+			int c = 1;
+			while(count2>0 && c<=thresNDGC)
+			{
+				if(c==1) {IDCG+=2;System.out.print("IDCG+=2");}
+				else {IDCG+= (2/Math.log(c));System.out.print("  2/Math.log "+c);}
+				count2--;
+				c++;
+			}
+			while(count1>0 && c<=thresNDGC)
+			{
+				if(c==1) {IDCG+=1;System.out.print("IDCG+=2");}
+				else {IDCG+= (1/Math.log(c));System.out.print("  1/Math.log "+c);}
+				count1--;
+				c++;
+			}
+			/*int c = 2;
 			while(count2>0)
 			{
 				count2--;
-				IDCG+= (2/Math.log(c));
+				IDCG+= (2/Math.log(c));System.out.println("2/Math.log "+c);
 				c++;
 			}
 			while(count1>0)
@@ -169,13 +192,14 @@ public class RunTestingAlgorithm {
 				count1--;
 				IDCG+= (1/Math.log(c));
 				c++;
-			}
-			//System.out.print("qID:"+q.qID+"___DCG= "+DCG+" IDCG= "+IDCG+"_____");
+			}*/
+			System.out.print("\nqID:"+q.qID+"___DCG= "+DCG+" IDCG= "+IDCG+"_____");
 			double NDCG = DCG/IDCG;
 			q.NDCG = NDCG;
 			
 			if(NDCG>=0 && NDCG<=1) {avgNDCG += NDCG;totalCount++;}
-			//System.out.println("NDCG Score for Query "+q.qID+" is equal to "+q.NDCG);
+			System.out.println("NDCG Score for Query "+q.qID+" is equal to "+q.NDCG);
+			System.exit(0);
 		}
 		System.out.println(avgNDCG);
 		avgNDCG = avgNDCG/totalCount;
