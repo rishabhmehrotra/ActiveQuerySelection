@@ -8,14 +8,21 @@ public class Query {
 	public int qID;
 	public double NDCG;
 	public float currentAvgSimilarity;
+	public float normalizedSimilarity;
+
 	public Double normalizedDisagreement;
 	public Double combine;
+	public Double combine2;
+	public Double combine3;
+	public double PL1, PL2, PL3, PL4;
 
 	public Query()
 	{
 		nD = 0;
 		this.disagreement = 0.0;
 		this.currentAvgSimilarity = 0;
+		this.normalizedDisagreement = 0.0;
+		this.PL1 = this.PL2 = this.PL3 = this.PL4 = 0.0;
 		//listOfDocuments = new ArrayList<String>();
 		listOfDocuments = new ArrayList<Document>();
 	}
@@ -67,5 +74,9 @@ public class Query {
 	
 	public void setNormalizedDisagreement(Double normalizedDisagreement) {
 		this.normalizedDisagreement = normalizedDisagreement;
+	}
+	
+	public void setNormalizedSimilarity(float normalizedSimilarity) {
+		this.normalizedSimilarity = normalizedSimilarity;
 	}
 }

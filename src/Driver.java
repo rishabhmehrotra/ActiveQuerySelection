@@ -50,19 +50,21 @@ public class Driver {
 			// and we have populated the disagreement scores for all the queries...we now have to find query with maximum vote entropy/disagreement
 			
 			
-			int batch = d.experimentSize;
+			int batch = d.batchSize;
 			while(batch>0)
 			{
 				new QuerySimilarity(d);
 				batch--;
 				// we need to normalize the disagreement to make it a value between 0 & 1
 				double maxDisagreement = 0, minDisagreement = 100000;
+				float maxSim=0, minSim=1000;
 				Iterator<Query> it = d.candidates.iterator();
 				while(it.hasNext())
 				{
 					Query q = it.next();
 					if(q.disagreement < minDisagreement) minDisagreement = q.disagreement;
 					if(q.disagreement > maxDisagreement) maxDisagreement = q.disagreement;
+					if(q.currentAvgSimilarity > maxSim) maxSim = q.currentAvgSimilarity;
 				}
 				System.out.println("Max disagreement: "+maxDisagreement+" min disagreement: "+minDisagreement);
 				it = d.candidates.iterator();
@@ -71,10 +73,13 @@ public class Driver {
 					Query q = it.next();
 					Double normalizedDisagreement = q.disagreement/maxDisagreement;
 					q.setNormalizedDisagreement(normalizedDisagreement);
+					float normalizedSim = q.currentAvgSimilarity/maxSim;
+					q.setNormalizedSimilarity(normalizedSim);
 				}
 		
 				
-				Query next = null, nextBySim = null, nextByCombined = null; double max=0, maxSimilarity=0, maxCombined=0;
+				Query next = null, nextBySim = null, nextByCombined = null, nextByCombined2 = null, nextByCombined3 = null;
+				double max=0, maxSimilarity=0, maxCombined=0, maxCombined2=0, maxCombined3=0;
 
 				Iterator<Query> itr = d.candidates.iterator();
 				//for(j=0;j<d.nCandidateQ;j++)
@@ -82,25 +87,41 @@ public class Driver {
 				{
 					Query q = itr.next();
 					//Query q = d.listOfCandidateQueries[j];
-					if(q.currentAvgSimilarity >= maxSimilarity) {maxSimilarity = q.currentAvgSimilarity;nextBySim = q;}
+					//if(q.currentAvgSimilarity >= maxSimilarity) {maxSimilarity = q.currentAvgSimilarity;nextBySim = q;}
+					if(q.normalizedSimilarity >= maxSimilarity) {maxSimilarity = q.normalizedSimilarity;nextBySim = q;}
 					if(q.disagreement > max) {max = q.disagreement;next = q;}
 					double combine = q.normalizedDisagreement*q.currentAvgSimilarity;
+					double combine2 = Math.sqrt(q.normalizedDisagreement)+q.currentAvgSimilarity;
+					double combine3 = q.normalizedDisagreement+q.normalizedSimilarity;
 					q.combine = combine;
-					if(combine > maxCombined) {maxCombined = combine;nextByCombined = q;}
+					q.combine2 = combine2;
+					q.combine3 = combine3;
+					if(combine >= maxCombined) {maxCombined = combine;nextByCombined = q;}
+					if(combine2 >= maxCombined2) {maxCombined2 = combine2;nextByCombined2 = q;}
+					if(combine3 > maxCombined3) {maxCombined3 = combine3;nextByCombined3 = q;}
 					//System.out.println("For query with qID= "+q.qID+" the disagreement is= "+q.disagreement);
 				}
 				// now we have the query which should be used next and we need to add it to the base list on which we should train henceforth
 				if(next == null) System.out.println("/n/nThe NEXT query selected is NULL, something went wrong, have a look!/n/n");
 				//d.base.add(next);
-				System.out.println("Comparing Disagreement & Similarity:\n By Disagreement "+next.disagreement+ "__"+ next.currentAvgSimilarity+" "+next.combine+"\n By Similarity: "+nextBySim.disagreement+"__"+nextBySim.currentAvgSimilarity+" "+nextBySim.combine+"\n By Combine"+nextByCombined.disagreement+"__"+nextByCombined.currentAvgSimilarity+" "+nextByCombined.combine);
-				d.base.add(nextBySim);
+				
+				
+				//if(nextByCombined2 == null) {removeQueryFromCandidateSet(nextByCombined2);batch++; continue;}
+				
+				
+				System.out.println("------\nComparing Disagreement & Similarity:\nBy Disagreement "+next.disagreement+ "__"+next.normalizedDisagreement+ "__"+ next.currentAvgSimilarity+" "+next.combine+" "+next.combine2+" "+next.combine3);
+				System.out.println("By Similarity: "+nextBySim.disagreement+ "__"+nextBySim.normalizedDisagreement+"__"+nextBySim.currentAvgSimilarity+" "+nextBySim.combine +" "+nextBySim.combine2+" "+nextBySim.combine3);
+				System.out.println("By Combine"+nextByCombined.disagreement+ "__"+nextByCombined.normalizedDisagreement+"__"+nextByCombined.currentAvgSimilarity+" "+nextByCombined.combine+" "+nextByCombined.combine2+" "+nextByCombined.combine3);
+				System.out.println("By Combine2"+nextByCombined2.disagreement+ "__"+nextByCombined2.normalizedDisagreement+"__"+nextByCombined2.currentAvgSimilarity+" "+nextByCombined2.combine+" "+nextByCombined2.combine2+" "+nextByCombined2.combine3);
+				System.out.println("By Combine3"+nextByCombined3.disagreement+ "__"+nextByCombined3.normalizedDisagreement+"__"+nextByCombined3.currentAvgSimilarity+" "+nextByCombined3.combine+" "+nextByCombined3.combine2+" "+nextByCombined3.combine3);
+				d.base.add(nextByCombined3);
 				d.nBase++;
 				System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Max similarity query being removed which has sim= "+nextBySim.currentAvgSimilarity);
 				//System.out.println("---------- Query being removed now: "+next.qID+"_"+next.nD+"_"+next.disagreement+"_"+next.listOfDocuments.get(0));
 				// now we need to remove this particular selected NEXT query from the list of candidates
 				//System.out.println("Size before query removal from candidate set: "+d.nCandidateQ);
 				//removeQueryFromCandidateSet(next);
-				removeQueryFromCandidateSet(nextBySim);
+				removeQueryFromCandidateSet(nextByCombined3);
 				//System.out.println("Size after query removal from candidate set: "+d.nCandidateQ);
 				//System.out.println("Size of the new base set: "+d.base.size());
 			}

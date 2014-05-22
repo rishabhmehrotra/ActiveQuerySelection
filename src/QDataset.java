@@ -21,7 +21,7 @@ public class QDataset {
 	public double resultRandom, resultCandidates;
 	public HashMap<String, HashMap<String, Float>> queryTerms;
 	
-	public int experimentSize = 5;
+	public int batchSize = 5;
 	public int limit = 600;
 
 	//public Query[] listOfCandidateQueries;
@@ -92,7 +92,7 @@ public class QDataset {
 	void populateCandidates() {
 		for(int i=21;i<limit;i++)
 		{
-			candidates.add(listOfQueries[i]);
+			if(listOfQueries[i].nD > 0) candidates.add(listOfQueries[i]);
 		}
 		System.out.println("Candidates populated with "+candidates.size());
 	}

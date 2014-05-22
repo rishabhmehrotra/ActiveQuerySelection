@@ -17,6 +17,7 @@ public class QuerySimilarity {
 	
 	private void computeQueryTermSimilarity() {
 		// find similarity between queries from the entire current candidate set
+		int zeroDist=0;
 		Iterator<Query> itr = d.candidates.iterator();
 		while(itr.hasNext())
 		{
@@ -42,6 +43,7 @@ public class QuerySimilarity {
 				}
 			}
 			q1.currentAvgSimilarity = sumSim/c;
+			//if(sumSim == 0) {zeroDist++;if(zeroDist > 5) System.out.println("\n\n*************\n\nZeroDIstance: qid:"+q1.qID);}
 			//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Avg sim for query "+q1.qID+" is: "+q1.currentAvgSimilarity);
 		}
 	}

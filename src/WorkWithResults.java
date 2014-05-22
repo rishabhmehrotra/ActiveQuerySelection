@@ -24,6 +24,12 @@ public class WorkWithResults {
 		populateCandidateScores();
 		// so now we have all the test queries populated with their respective scores from each of the models learnt
 		computeDisagreement();
+		computePLScores();
+	}
+	
+	public void computePLScores()
+	{
+		
 	}
 
 	public void computeDisagreement() {
