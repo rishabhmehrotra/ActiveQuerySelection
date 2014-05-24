@@ -30,7 +30,7 @@ public class WorkWithResults {
 	public void computePLScores()
 	{
 		// we now have to calculate
-		Collections.sort(q.listOfDocuments, new Comparator<Document>()  
+		/*Collections.sort(q.listOfDocuments, new Comparator<Document>()  
 				{
 
 					public int compare(Document d1, Document d2) {
@@ -40,6 +40,7 @@ public class WorkWithResults {
 					}
 				  
 				});
+				*/
 	}
 
 	public void computeDisagreement() {
