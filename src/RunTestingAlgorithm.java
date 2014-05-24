@@ -117,11 +117,14 @@ public class RunTestingAlgorithm {
 	
 	public void computeNDCG() throws IOException
 	{
-		int thresNDGC = 10;
+		int thresNDGC = 10;// remember to change it in RunRandomTest class as well
 		// sort the documents for each query in base
 		double avgNDCG=0.0;
 		int totalCount=0;
 		Iterator<Query> itr = this.listTestQueries.iterator();
+		FileWriter fstream1 = new FileWriter("src/data/LETOR/NDCG_errorBars.txt", true);
+		BufferedWriter out1 = new BufferedWriter(fstream1);
+		out1.write(d.base.size()+"\t");
 		while(itr.hasNext())
 		{
 			Query q = itr.next();
@@ -180,27 +183,20 @@ public class RunTestingAlgorithm {
 				count1--;
 				c++;
 			}
-			/*int c = 2;
-			while(count2>0)
-			{
-				count2--;
-				IDCG+= (2/Math.log(c));System.out.println("2/Math.log "+c);
-				c++;
-			}
-			while(count1>0)
-			{
-				count1--;
-				IDCG+= (1/Math.log(c));
-				c++;
-			}*/
 			System.out.print("\nqID:"+q.qID+"___DCG= "+DCG+" IDCG= "+IDCG+"_____");
 			double NDCG = DCG/IDCG;
 			q.NDCG = NDCG;
 			
-			if(NDCG>=0 && NDCG<=1) {avgNDCG += NDCG;totalCount++;}
+			if(NDCG>=0 && NDCG<=1)
+			{
+				avgNDCG += NDCG;totalCount++;
+				out1.write(NDCG+"\t");
+			}
 			System.out.println("NDCG Score for Query "+q.qID+" is equal to "+q.NDCG);
-			System.exit(0);
+			//System.exit(0);
 		}
+		out1.write("\n");
+		out1.close();
 		System.out.println(avgNDCG);
 		avgNDCG = avgNDCG/totalCount;
 		d.resultCandidates = avgNDCG;

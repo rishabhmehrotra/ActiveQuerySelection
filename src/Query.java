@@ -8,7 +8,12 @@ public class Query {
 	public int qID;
 	public double NDCG;
 	public float currentAvgSimilarity;
+	public float similarityLDA;
 	public float normalizedSimilarity;
+	public float normalizedLDASimilarity;
+	
+	public HashMap<String, Float> termMap;
+	public String termString;
 
 	public Double normalizedDisagreement;
 	public Double combine;
@@ -19,6 +24,8 @@ public class Query {
 	public Query()
 	{
 		nD = 0;
+		this.termString = "";
+		this.similarityLDA= (float) 0.0;
 		this.disagreement = 0.0;
 		this.currentAvgSimilarity = 0;
 		this.normalizedDisagreement = 0.0;
@@ -78,5 +85,21 @@ public class Query {
 	
 	public void setNormalizedSimilarity(float normalizedSimilarity) {
 		this.normalizedSimilarity = normalizedSimilarity;
+	}
+	
+	public void setNormalizedLDASimilarity(float normalizedLDASimilarity) {
+		this.normalizedLDASimilarity = normalizedLDASimilarity;
+	}
+	
+	public HashMap<String, Float> getTermMap() {
+		return termMap;
+	}
+
+	public void setTermMap(HashMap<String, Float> termMap) {
+		this.termMap = termMap;
+	}
+	
+	public void setTermString(String termString) {
+		this.termString = termString;
 	}
 }

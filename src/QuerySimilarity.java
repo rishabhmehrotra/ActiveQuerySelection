@@ -3,6 +3,10 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
 
+import cc.mallet.topics.TopicInferencer;
+import cc.mallet.types.Instance;
+import cc.mallet.types.InstanceList;
+
 public class QuerySimilarity {
 	
 	public QDataset d;
@@ -12,7 +16,77 @@ public class QuerySimilarity {
 	{
 		this.d = d;
 		//populateQueryTerms();
+		addQueryTermsToQuery();
 		computeQueryTermSimilarity();
+		computeQueryLDASimilarity();
+	}
+	
+	public void computeQueryLDASimilarity()
+	{
+		Iterator<Query> itr = this.d.candidates.iterator();
+		while(itr.hasNext())
+		{
+			Query q1 = itr.next();
+			if(q1.qID==0) continue;
+			Iterator<Query> itr2 = this.d.candidates.iterator();
+			int c = 0; float sumSim = 0;
+			while(itr2.hasNext())
+			{
+				Query q2 = itr2.next();
+				if(q2.qID==0) continue;
+				if(q1.qID != q2.qID)
+				{
+					float sim = 0;
+					InstanceList testing = new InstanceList(d.ldaModel.instances.getPipe());
+					testing.addThruPipe(new Instance(q1.termString, null, "test instance", null));
+					testing.addThruPipe(new Instance(q2.termString, null, "test instance", null));
+					TopicInferencer inferencer = d.ldaModel.model.getInferencer();
+					double[] testProb1 = inferencer.getSampledDistribution(testing.get(0), d.numTopics, 1, 5);
+					double[] testProb2 = inferencer.getSampledDistribution(testing.get(1), d.numTopics, 1, 5);
+					// now compute cosine similarity between these LDA Topic distributions between both the queries
+					float num = 0, d1=0,d2=0;
+					for(int j=0;j<d.numTopics;j++)
+			    	{
+						num += (float) (testProb1[j]*testProb2[j]);
+						d1 += (testProb1[j]*testProb1[j]);
+						d2 += (testProb2[j]*testProb2[j]);
+			    	}
+					float den = (float) (Math.sqrt(d1)*Math.sqrt(d2));
+					sim = num/den;
+					//System.out.println("LDA Similarity Score:"+sim+"for queries: "+q1.qID+"_"+q1.termString+"___________________________"+q2.qID+" "+q2.termString);
+					sumSim+= sim;
+					c++;
+				}
+			}
+			q1.similarityLDA = sumSim/c;
+			//if(sumSim == 0) {zeroDist++;if(zeroDist > 5) System.out.println("\n\n*************\n\nZeroDIstance: qid:"+q1.qID);}
+			//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Avg LDA sim for query "+q1.qID+" is: "+q1.similarityLDA);
+		}
+	}
+	
+	public void addQueryTermsToQuery()
+	{
+		//for(int i=0;i<this.nQ;i++)
+		Iterator<Query> itr = d.candidates.iterator();
+		while(itr.hasNext())
+		{
+			Query q = itr.next();
+			if(q.qID == 0) continue;
+			HashMap<String, Float> map = d.queryTerms.get(""+q.qID);
+			q.setTermMap(map);
+			String str = "";
+			for(String words: map.keySet())
+			{
+				Float size = map.get(words);
+				for(int j=1;j<=size;j++)
+				{
+					str += words+" ";
+				}
+			}
+			str = str.trim();
+			q.setTermString(str);
+			//System.out.println(this.listOfQueries[i].qID+"QueryTermsString:_"+this.listOfQueries[i].termString+"_");
+		}
 	}
 	
 	private void computeQueryTermSimilarity() {

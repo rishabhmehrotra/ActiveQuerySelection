@@ -114,10 +114,14 @@ public class RunRandomTestingAlgorithm {
 	
 	public void computeNDCG() throws IOException
 	{
+		int thresNDGC = 10;
 		// sort the documents for each query in base
 		double avgNDCG=0.0;
 		int totalCount=0;
 		Iterator<Query> itr = this.listTestQueries.iterator();
+		FileWriter fstream1 = new FileWriter("src/data/LETOR/NDCG_RANDOM_errorBars.txt", true);
+		BufferedWriter out1 = new BufferedWriter(fstream1);
+		out1.write(this.listTestQueries.size()+"\t");
 		while(itr.hasNext())
 		{
 			Query q = itr.next();
@@ -134,16 +138,21 @@ public class RunRandomTestingAlgorithm {
 						}
 					  
 					});
-			// now we have the documents for this query sorted
-			//System.out.print("qID:"+q.qID+"___");
-			Iterator<Document> itr2 = q.listOfDocuments.iterator();
+			Iterator<Document> itr3 = q.listOfDocuments.iterator();
 			int count = 0, count0 = 0, count1 = 0, count2 = 0;
-			double DCG=0.0, IDCG=0.0;
-			while(itr2.hasNext()){
-				Document d = itr2.next();
+			while(itr3.hasNext())
+			{
+				Document d = itr3.next();
 				if(d.relevance == 0) count0++;
 				if(d.relevance == 1) count1++;
 				if(d.relevance == 2) count2++;
+			}
+			// now we have the documents for this query sorted
+			//System.out.print("qID:"+q.qID+"___");
+			Iterator<Document> itr2 = q.listOfDocuments.iterator();
+			double DCG=0.0, IDCG=0.0;
+			while(itr2.hasNext()){
+				Document d = itr2.next();
 				count++;
 				if(count==1) {DCG+= d.relevance;IDCG+= d.relevance;}
 				else
@@ -151,10 +160,27 @@ public class RunRandomTestingAlgorithm {
 					DCG+= (d.relevance/Math.log(count));
 				}
 				//System.out.print(d.relevance+" ~ "+d.testScore+"_______");
-				if(count == 10) break;
+				if(count == thresNDGC) break;
 			}
 			//calculate IDCG now
-			int c = 2;
+			System.out.println("0s: "+count0+"1s: "+count1+"___2s: "+count2);
+			//calculate IDCG now
+			int c = 1;
+			while(count2>0 && c<=thresNDGC)
+			{
+				if(c==1) {IDCG+=2;System.out.print("IDCG+=2");}
+				else {IDCG+= (2/Math.log(c));System.out.print("  2/Math.log "+c);}
+				count2--;
+				c++;
+			}
+			while(count1>0 && c<=thresNDGC)
+			{
+				if(c==1) {IDCG+=1;System.out.print("IDCG+=2");}
+				else {IDCG+= (1/Math.log(c));System.out.print("  1/Math.log "+c);}
+				count1--;
+				c++;
+			}
+			/*int c = 2;
 			while(count2>0)
 			{
 				count2--;
@@ -166,14 +192,20 @@ public class RunRandomTestingAlgorithm {
 				count1--;
 				IDCG+= (1/Math.log(c));
 				c++;
-			}
+			}*/
 			//System.out.print("qID:"+q.qID+"___DCG= "+DCG+" IDCG= "+IDCG+"_____");
 			double NDCG = DCG/IDCG;
 			q.NDCG = NDCG;
 			
-			if(NDCG>=0 && NDCG<=1) {avgNDCG += NDCG;totalCount++;}
+			if(NDCG>=0 && NDCG<=1)
+			{
+				avgNDCG += NDCG;totalCount++;
+				out1.write(NDCG+"\t");
+			}
 			//System.out.println("NDCG Score for Query "+q.qID+" is equal to "+q.NDCG);
 		}
+		out1.write("\n");
+		out1.close();
 		System.out.println(avgNDCG);
 		avgNDCG = avgNDCG/totalCount;
 		d.resultRandom = avgNDCG;

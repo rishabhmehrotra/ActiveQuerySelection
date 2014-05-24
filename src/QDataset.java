@@ -6,6 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+
+import cc.mallet.topics.ParallelTopicModel;
 
 
 public class QDataset {
@@ -20,19 +23,21 @@ public class QDataset {
 	public ArrayList<Query> randomQ;
 	public double resultRandom, resultCandidates;
 	public HashMap<String, HashMap<String, Float>> queryTerms;
+	public int numTopics = 10;
 	
-	public int batchSize = 5;
+	public int batchSize = 10;
 	public int limit = 600;
 
 	//public Query[] listOfCandidateQueries;
 	public int nCandidateQ;
-
 	public int nBase;
+	public BuildLDAModel ldaModel;
+	
 
 	public QDataset(String filename) throws IOException
 	{
 		this.filename = filename;
-		nQ=0;
+		this.nQ=0;
 		listOfQueries = new Query[10000];
 		base = new ArrayList<Query>();
 		subset1 = new ArrayList<Query>();
@@ -45,8 +50,31 @@ public class QDataset {
 		
 		populateQueryTerms();
 		populateDataset();
+		addQueryTermsToQuery();
 		populateBase();
 		populateCandidates();
+	}
+	
+	public void addQueryTermsToQuery()
+	{
+		for(int i=0;i<this.nQ;i++)
+		{
+			if(this.listOfQueries[i].qID == 0) continue;
+			HashMap<String, Float> map = this.queryTerms.get(""+this.listOfQueries[i].qID);
+			this.listOfQueries[i].setTermMap(map);
+			String str = "";
+			for(String words: map.keySet())
+			{
+				Float size = map.get(words);
+				for(int j=1;j<=size;j++)
+				{
+					str += words+" ";
+				}
+			}
+			str = str.trim();
+			this.listOfQueries[i].setTermString(str);
+			//System.out.println(this.listOfQueries[i].qID+"QueryTermsString:_"+this.listOfQueries[i].termString+"_");
+		}
 	}
 	
 	public void populateQueryTerms() throws IOException
@@ -92,8 +120,17 @@ public class QDataset {
 	void populateCandidates() {
 		for(int i=21;i<limit;i++)
 		{
-			if(listOfQueries[i].nD > 0) candidates.add(listOfQueries[i]);
+			if(listOfQueries[i].nD > 0 && listOfQueries[i].qID!=0)
+			{
+				this.candidates.add(this.listOfQueries[i]);
+			}
 		}
+		/*Iterator<Query> itr = this.candidates.iterator();
+		while(itr.hasNext())
+		{
+			Query q = itr.next();
+			System.out.println(q.qID+" Candidate set "+q.termString);
+		}*/
 		System.out.println("Candidates populated with "+candidates.size());
 	}
 
@@ -110,13 +147,15 @@ public class QDataset {
 			{
 				
 				String qID = line.substring(6, line.indexOf(' ', 6));
+				int qid = Integer.parseInt(qID);
+				if(qid == 0) {line = br.readLine();continue;}
 				//System.out.println("Dataset qID=_"+qID+"_");
 				if(prevQID.compareTo(qID) != 0)
 				{
 					//System.out.println("new query found:"+prevQID+" "+qID);
 					// new query found
 					//first add previous query to the list of queries in the dataset
-					listOfQueries[nQ++] = q;
+					if(qid!=0) this.listOfQueries[this.nQ++] = q;
 					c+=q.nD;
 					q = new Query();
 				}
@@ -125,9 +164,9 @@ public class QDataset {
 				//if(nQ%1000 == 0) System.out.println(qID);
 				line = br.readLine();
 			}
-			listOfQueries[nQ++] = q;
+			if(q.qID != 0) this.listOfQueries[this.nQ++] = q;
 			c+= q.nD;
-			System.out.println("nQ= "+nQ);
+			System.out.println("nQ= "+this.nQ);
 			System.out.println("Total no of documents = should be total no of lines in the file = c= "+c);
 			System.out.println("Database populated with "+this.nQ);
 		} catch (FileNotFoundException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
@@ -135,16 +174,18 @@ public class QDataset {
 	
 	void populateBase()
 	{
-		for(int i=0;i<20;i++)
+		int c = 20;
+		for(int i=0;i<c;i++)
 		{
-			base.add(listOfQueries[i]);
+			if(listOfQueries[i].qID == 0){c++; continue;}
+			else base.add(listOfQueries[i]);
 		}
 		this.nBase = 20;
 		System.out.println("Base populated with "+base.size());
 	}
 	
 	public ArrayList<Query> getCandidates() {
-		return candidates;
+		return this.candidates;
 	}
 
 	public void setCandidates(ArrayList<Query> candidates) {

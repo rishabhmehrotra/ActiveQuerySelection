@@ -29,7 +29,17 @@ public class WorkWithResults {
 	
 	public void computePLScores()
 	{
-		
+		// we now have to calculate
+		Collections.sort(q.listOfDocuments, new Comparator<Document>()  
+				{
+
+					public int compare(Document d1, Document d2) {
+						if(d1.testScore < d2.testScore) return 1;
+						else if(d1.testScore > d2.testScore) return -1;
+						else return 0;
+					}
+				  
+				});
 	}
 
 	public void computeDisagreement() {
