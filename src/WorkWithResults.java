@@ -7,7 +7,7 @@ public class WorkWithResults {
 	public int subsetNo;
 	public QDataset d;
 	//Query[] listOfCandidateQueries;
-	ArrayList<Query> listOfCandidates;
+	ArrayList<Query> listOfCandidates;// REMEMBER: we finally set d.candidates to this list
 
 	
 	public WorkWithResults(String candidatefile, int i, QDataset d, String prediction1File, String prediction2File, String prediction3File, String prediction4File)
@@ -24,23 +24,49 @@ public class WorkWithResults {
 		populateCandidateScores();
 		// so now we have all the test queries populated with their respective scores from each of the models learnt
 		computeDisagreement();
-		computePLScores();
+		computePLScores(1);
 	}
 	
-	public void computePLScores()
+	public void computePLScores(final int i)
 	{
-		// we now have to calculate
-		/*Collections.sort(q.listOfDocuments, new Comparator<Document>()  
-				{
+		// we now have to calculate the probability of the sorted ranklist for each query
+		Iterator<Query> itr = listOfCandidates.iterator();
+		while(itr.hasNext())
+		{
+			Query q = itr.next();
+			Collections.sort(q.listOfDocuments, new Comparator<Document>()  // REVERSE sort the arrayList, so that den of p is easy
+					{
 
-					public int compare(Document d1, Document d2) {
-						if(d1.testScore < d2.testScore) return 1;
-						else if(d1.testScore > d2.testScore) return -1;
-						else return 0;
-					}
-				  
-				});
-				*/
+						public int compare(Document d1, Document d2) {
+							Double score1 = 0.0, score2 = 0.0;
+							if(i == 1) {score1 = d1.score1; score2=d2.score1;}
+							else if(i == 2) {score1 = d1.score2; score2=d2.score2;}
+							else if(i == 3) {score1 = d1.score3; score2=d2.score3;}
+							else if(i == 4) {score1 = d1.score4; score2=d2.score4;}
+							else {System.out.println("Failed inside computePLScore in WorkWithResults error 1");System.exit(0);}
+							if(score1 < score2) return -1;
+							else if(score1 > score2) return 1;
+							else return 0;
+						}
+					});
+			
+			// now we have the sorted list of docs as per the scores obtained, we now need to traverse the list & compute probability
+			// REMEMBER THE ARRAYLIST IS NOW REVERSE SORTED
+			double prod = 1.0, denSum = 0;
+			Iterator<Document> it = q.listOfDocuments.iterator();
+			while(it.hasNext()){
+				Document d = it.next();
+				double num = 0.0, currentScore = 0.0;
+				if(i == 1) currentScore = d.score1; if(i == 2) currentScore = d.score2;
+				if(i == 3) currentScore = d.score3; if(i == 4) currentScore = d.score4;
+				num = currentScore;
+				denSum += currentScore;
+				prod *= (num/denSum);
+			}
+			if(i==1) q.PL1 = prod; if(i==2) q.PL2 = prod;
+			if(i==3) q.PL3 = prod; if(i==4) q.PL4 = prod;
+			System.out.println("For query: "+q.qID+" PL Prob= "+prod);
+		}		
 	}
 
 	public void computeDisagreement() {
