@@ -18,6 +18,8 @@ public class QDataset {
 	public ArrayList<Query> base;
 	public ArrayList<Query> subset1;
 	public ArrayList<Query> subset2;
+	public ArrayList<Query> subset3;
+	public ArrayList<Query> subset4;
 	public ArrayList<Query> candidates;
 	public ArrayList<Query> test; // never updated yet from RunTestingAlgorithm
 	public ArrayList<Query> randomQ;
@@ -42,6 +44,8 @@ public class QDataset {
 		base = new ArrayList<Query>();
 		subset1 = new ArrayList<Query>();
 		subset2 = new ArrayList<Query>();
+		subset3 = new ArrayList<Query>();
+		subset4 = new ArrayList<Query>();
 		candidates = new ArrayList<Query>();
 		test = new ArrayList<Query>();
 		randomQ = new ArrayList<Query>();

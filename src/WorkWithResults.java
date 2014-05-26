@@ -24,15 +24,18 @@ public class WorkWithResults {
 		populateCandidateScores();
 		// so now we have all the test queries populated with their respective scores from each of the models learnt
 		computeDisagreement();
+		
 		computePLScores(1);
 		computePLScores(2);
 		computePLScores(3);
 		computePLScores(4);
+		//System.exit(0);
 	}
 	
 	public void computePLScores(final int i)
 	{
 		// we now have to calculate the probability of the sorted ranklist for each query
+		System.out.println("Inside computePLScores function, calculating the PL scores now");
 		Iterator<Query> itr = listOfCandidates.iterator();
 		while(itr.hasNext())
 		{
@@ -60,6 +63,7 @@ public class WorkWithResults {
 			while(it.hasNext()){
 				Document d = it.next();
 				double num = 0.0, currentScore = 0.0;
+				//System.out.println(d.score1+" "+d.score2+" "+d.score3+" "+d.score4);
 				if(i == 1) currentScore = d.score1; if(i == 2) currentScore = d.score2;
 				if(i == 3) currentScore = d.score3; if(i == 4) currentScore = d.score4;
 				num = currentScore;
@@ -68,8 +72,9 @@ public class WorkWithResults {
 			}
 			if(i==1) q.PL1 = prod; if(i==2) q.PL2 = prod;
 			if(i==3) q.PL3 = prod; if(i==4) q.PL4 = prod;
-			System.out.println("For query: "+q.qID+" PL Prob= "+prod);
-		}		
+			//System.out.print("For query: "+q.qID+" PL Prob= "+prod+"_____");
+		}
+		//System.out.println();
 	}
 
 	public void computeDisagreement() {

@@ -58,11 +58,13 @@ public class Driver {
 			sizeSubset = (int) (0.5*d.nBase);
 			d.subset1 = (ArrayList<Query>) randomSample(d.base,sizeSubset);
 			d.subset2 = (ArrayList<Query>) randomSample(d.base,sizeSubset);
+			d.subset3 = (ArrayList<Query>) randomSample(d.base,sizeSubset);
+			d.subset4 = (ArrayList<Query>) randomSample(d.base,sizeSubset);
 			// make the training files for both the subsets
 			prepareTrainFiles(d.subset1,1);
 			prepareTrainFiles(d.subset2,2);
-			prepareTrainFiles(d.subset2,3);
-			prepareTrainFiles(d.subset2,4);
+			prepareTrainFiles(d.subset3,3);
+			prepareTrainFiles(d.subset4,4);
 			prepareCandidateFile(d.candidates);
 			// now that we have both the subsets, we have to train 2 models on these 2 subsets
 			new RunLearningAlgorithm(d.subset1,1);
