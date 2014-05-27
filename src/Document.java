@@ -1,10 +1,10 @@
 
 public class Document {
 	public String docFeatures;
-	public Double score1;
-	public Double score2;
-	public Double score3;
-	public Double score4;
+	public Double score1, nScore1;
+	public Double score2, nScore2;
+	public Double score3, nScore3;
+	public Double score4, nScore4;
 	public double testScore;
 	public int relevance;
 	
@@ -12,10 +12,10 @@ public class Document {
 	{
 		this.docFeatures = docFeatures;
 		this.relevance = Integer.parseInt(docFeatures.charAt(0)+"");
-		this.score1 = 0.0;
-		this.score2 = 0.0;
-		this.score3 = 0.0;
-		this.score4 = 0.0;
+		this.score1 = 0.0; this.nScore1 = 0.0;
+		this.score2 = 0.0; this.nScore1 = 0.0;
+		this.score3 = 0.0; this.nScore1 = 0.0;
+		this.score4 = 0.0; this.nScore1 = 0.0;
 	}
 	
 	public Document(String docFeatures, Double testScore)

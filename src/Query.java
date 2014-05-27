@@ -19,7 +19,7 @@ public class Query {
 	public Double combine;
 	public Double combine2;
 	public Double combine3;
-	public double PL1, PL2, PL3, PL4;
+	public double PL1, PL2, PL3, PL4, avgPL;
 
 	public Query()
 	{
@@ -101,5 +101,25 @@ public class Query {
 	
 	public void setTermString(String termString) {
 		this.termString = termString;
+	}
+	
+	public void setPL1(double pL1) {
+		PL1 = pL1;
+	}
+
+	public void setPL2(double pL2) {
+		PL2 = pL2;
+	}
+
+	public void setPL3(double pL3) {
+		PL3 = pL3;
+	}
+
+	public void setPL4(double pL4) {
+		PL4 = pL4;
+	}
+
+	public void setAvgPL(double avgPL) {
+		this.avgPL = avgPL;
 	}
 }

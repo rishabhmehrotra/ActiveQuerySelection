@@ -118,8 +118,8 @@ public class Driver {
 				}
 		
 				
-				Query next = null, nextBySim = null, nextByLDASim=null, nextByCombined = null, nextByCombined2 = null, nextByCombined3 = null;
-				double max=0, maxSimilarity=0, maxLDASimilarity=0, maxCombined=0, maxCombined2=0, maxCombined3=0;
+				Query next = null, nextBySim = null, nextByLDASim=null, nextByCombined = null, nextByCombined2 = null, nextByCombined3 = null, nextByPL = null;
+				double max=0, maxSimilarity=0, maxLDASimilarity=0, maxCombined=0, maxCombined2=0, maxCombined3=0, minPL = 1000;
 
 				Iterator<Query> itr = d.candidates.iterator();
 				//for(j=0;j<d.nCandidateQ;j++)
@@ -132,6 +132,12 @@ public class Driver {
 					if(q.normalizedSimilarity >= maxSimilarity) {maxSimilarity = q.normalizedSimilarity;nextBySim = q;}
 					if(q.normalizedLDASimilarity >= maxLDASimilarity) {maxLDASimilarity = q.normalizedLDASimilarity;nextByLDASim = q;}
 					if(q.disagreement > max) {max = q.disagreement;next = q;}
+					//System.out.println(q.PL1+" "+q.PL2+" "+q.PL3+" "+q.PL4);
+					double avgPL = q.PL1+q.PL2+q.PL3+q.PL4;
+					avgPL /= 4;
+					q.avgPL = avgPL;
+					//System.out.println("avg PL:"+avgPL+" query:"+q.qID);
+					if(q.avgPL < minPL) {minPL = q.avgPL; nextByPL = q;}
 					double combine = q.normalizedDisagreement*q.currentAvgSimilarity;
 					double combine2 = Math.sqrt(q.normalizedDisagreement)+q.currentAvgSimilarity;
 					double combine3 = q.normalizedDisagreement+q.normalizedLDASimilarity;
@@ -146,25 +152,27 @@ public class Driver {
 				// now we have the query which should be used next and we need to add it to the base list on which we should train henceforth
 				if(next == null) System.out.println("/n/nThe NEXT query selected is NULL, something went wrong, have a look!/n/n");
 				//d.base.add(next);
-				
+				if(nextByPL == null) {System.out.println("Skipping coz of null PL===\n\n\n\n===="); continue;}
 				
 				//if(nextByCombined2 == null) {removeQueryFromCandidateSet(nextByCombined2);batch++; continue;}
 				
 				
-				System.out.println("------\nComparing Disagreement & Similarity:\nBy Disagreement "+next.disagreement+ "__"+next.normalizedDisagreement+ "__"+ next.currentAvgSimilarity+" "+next.combine+" "+next.combine2+" "+next.combine3+" NormalizedLDASim:"+next.normalizedLDASimilarity);
-				System.out.println("By Similarity: "+nextBySim.disagreement+ "__"+nextBySim.normalizedDisagreement+"__"+nextBySim.currentAvgSimilarity+" "+nextBySim.combine +" "+nextBySim.combine2+" "+nextBySim.combine3+" NormalizedLDASim:"+nextBySim.normalizedLDASimilarity);
-				System.out.println("By LDANSimilarity: "+nextByLDASim.disagreement+ "__"+nextByLDASim.normalizedDisagreement+"__"+nextByLDASim.currentAvgSimilarity+" "+nextByLDASim.combine +" "+nextByLDASim.combine2+" "+nextByLDASim.combine3+" NormalizedLDASim:"+nextByLDASim.normalizedLDASimilarity);
-				System.out.println("By Combine"+nextByCombined.disagreement+ "__"+nextByCombined.normalizedDisagreement+"__"+nextByCombined.currentAvgSimilarity+" "+nextByCombined.combine+" "+nextByCombined.combine2+" "+nextByCombined.combine3+" NormalizedLDASim:"+nextByCombined.normalizedLDASimilarity);
-				System.out.println("By Combine2"+nextByCombined2.disagreement+ "__"+nextByCombined2.normalizedDisagreement+"__"+nextByCombined2.currentAvgSimilarity+" "+nextByCombined2.combine+" "+nextByCombined2.combine2+" "+nextByCombined2.combine3+" NormalizedLDASim:"+nextByCombined2.normalizedLDASimilarity);
-				System.out.println("By Combine3"+nextByCombined3.disagreement+ "__"+nextByCombined3.normalizedDisagreement+"__"+nextByCombined3.currentAvgSimilarity+" "+nextByCombined3.combine+" "+nextByCombined3.combine2+" "+nextByCombined3.combine3+" NormalizedLDASim:"+nextByCombined3.normalizedLDASimilarity);
-				d.base.add(nextByCombined3);
+				System.out.println("------\nComparing Disagreement & Similarity:\nBy Disagreement "+next.disagreement+ "__"+next.normalizedDisagreement+ "__"+ next.currentAvgSimilarity+" "+next.combine+" "+next.combine2+" "+next.combine3+" NormalizedLDASim:"+next.normalizedLDASimilarity+" Min PL:"+next.avgPL);
+				System.out.println("By Similarity: "+nextBySim.disagreement+ "__"+nextBySim.normalizedDisagreement+"__"+nextBySim.currentAvgSimilarity+" "+nextBySim.combine +" "+nextBySim.combine2+" "+nextBySim.combine3+" NormalizedLDASim:"+nextBySim.normalizedLDASimilarity+" Min PL:"+nextBySim.avgPL);
+				System.out.println("By LDANSimilarity: "+nextByLDASim.disagreement+ "__"+nextByLDASim.normalizedDisagreement+"__"+nextByLDASim.currentAvgSimilarity+" "+nextByLDASim.combine +" "+nextByLDASim.combine2+" "+nextByLDASim.combine3+" NormalizedLDASim:"+nextByLDASim.normalizedLDASimilarity+" Min PL:"+nextByLDASim.avgPL);
+				System.out.println("By Combine"+nextByCombined.disagreement+ "__"+nextByCombined.normalizedDisagreement+"__"+nextByCombined.currentAvgSimilarity+" "+nextByCombined.combine+" "+nextByCombined.combine2+" "+nextByCombined.combine3+" NormalizedLDASim:"+nextByCombined.normalizedLDASimilarity+" Min PL:"+nextByCombined.avgPL);
+				System.out.println("By Combine2"+nextByCombined2.disagreement+ "__"+nextByCombined2.normalizedDisagreement+"__"+nextByCombined2.currentAvgSimilarity+" "+nextByCombined2.combine+" "+nextByCombined2.combine2+" "+nextByCombined2.combine3+" NormalizedLDASim:"+nextByCombined2.normalizedLDASimilarity+" Min PL:"+nextByCombined2.avgPL);
+				System.out.println("By Combine3"+nextByCombined3.disagreement+ "__"+nextByCombined3.normalizedDisagreement+"__"+nextByCombined3.currentAvgSimilarity+" "+nextByCombined3.combine+" "+nextByCombined3.combine2+" "+nextByCombined3.combine3+" NormalizedLDASim:"+nextByCombined3.normalizedLDASimilarity+" Min PL:"+nextByCombined3.avgPL);
+				System.out.println("By minAvgPL"+nextByPL.disagreement+ "__"+nextByPL.normalizedDisagreement+"__"+nextByPL.currentAvgSimilarity+" "+nextByPL.combine+" "+nextByPL.combine2+" "+nextByPL.combine3+" NormalizedLDASim:"+nextByPL.normalizedLDASimilarity+" Min PL:"+nextByPL.avgPL);
+				
+				d.base.add(nextByPL);
 				d.nBase++;
-				System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Max similarity query being removed which has sim= "+nextBySim.currentAvgSimilarity);
+				System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Max similarity query being removed which has minAvgPL= "+nextBySim.avgPL);
 				//System.out.println("---------- Query being removed now: "+next.qID+"_"+next.nD+"_"+next.disagreement+"_"+next.listOfDocuments.get(0));
 				// now we need to remove this particular selected NEXT query from the list of candidates
 				//System.out.println("Size before query removal from candidate set: "+d.nCandidateQ);
 				//removeQueryFromCandidateSet(next);
-				removeQueryFromCandidateSet(nextByCombined3);
+				removeQueryFromCandidateSet(nextByPL);
 				//System.out.println("Size after query removal from candidate set: "+d.nCandidateQ);
 				//System.out.println("Size of the new base set: "+d.base.size());
 			}

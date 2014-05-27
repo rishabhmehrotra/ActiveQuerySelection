@@ -89,7 +89,7 @@ public class RunTestingAlgorithm {
 					// new query found
 					//first add previous query to the list of queries in the dataset
 					//listOfCandidateQueries[nTQ++] = q;
-					if(q.qID!=0) listTestQueries.add(q);
+					if(q.qID!=0) this.listTestQueries.add(q);
 					nTQ++;
 					c+=q.nD;
 					q = new Query();
@@ -102,7 +102,7 @@ public class RunTestingAlgorithm {
 				line1 = br1.readLine();
 			}
 			//listOfCandidateQueries[nTQ++] = q;
-			listTestQueries.add(q);
+			this.listTestQueries.add(q);
 			nTQ++;
 			//d.setListOfCandidateQueries(listOfCandidateQueries);
 			//d.setnTQ(nTQ);
@@ -205,7 +205,7 @@ public class RunTestingAlgorithm {
 		BufferedWriter out = new BufferedWriter(fstream);
 		out.write("\n\n"+"avgNDCG for Candidates training size of "+d.base.size()+" queries= "+avgNDCG+"\n");
 		out.close();
-		System.out.println("================= Average NDGC score for a total of "+listTestQueries.size()+" = "+totalCount+" queries: "+avgNDCG);
+		System.out.println("================= Average NDGC score for a total of "+this.listTestQueries.size()+" = "+totalCount+" queries: "+avgNDCG);
 	}
 	
 	public void populateTrainFiles() throws IOException {

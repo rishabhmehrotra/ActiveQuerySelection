@@ -121,7 +121,7 @@ public class RunRandomTestingAlgorithm {
 		Iterator<Query> itr = this.listTestQueries.iterator();
 		FileWriter fstream1 = new FileWriter("src/data/LETOR/NDCG_RANDOM_errorBars.txt", true);
 		BufferedWriter out1 = new BufferedWriter(fstream1);
-		out1.write(this.listTestQueries.size()+"\t");
+		out1.write(d.base.size()+"\t");
 		while(itr.hasNext())
 		{
 			Query q = itr.next();
@@ -214,7 +214,7 @@ public class RunRandomTestingAlgorithm {
 		BufferedWriter out = new BufferedWriter(fstream);
 		out.write("avgNDCG for RANDOM training size of "+this.listTestQueries.size()+" queries= "+avgNDCG+"\n\n");
 		out.close();
-		System.out.println("================= Average NDGC score for a total of "+listTestQueries.size()+" = "+totalCount+" RANDOM queries: "+avgNDCG);
+		System.out.println("================= Average NDGC score for a total of "+this.listTestQueries.size()+" = "+totalCount+" RANDOM queries: "+avgNDCG);
 	}
 	
 	public void populateTrainFiles() throws IOException {

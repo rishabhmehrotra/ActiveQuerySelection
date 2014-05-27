@@ -29,7 +29,6 @@ public class WorkWithResults {
 		computePLScores(2);
 		computePLScores(3);
 		computePLScores(4);
-		//System.exit(0);
 	}
 	
 	public void computePLScores(final int i)
@@ -40,15 +39,41 @@ public class WorkWithResults {
 		while(itr.hasNext())
 		{
 			Query q = itr.next();
+			if(q.qID == 0) continue;
+			
+			// normalize the scores so that the PL probability lies between 0 & 1
+			double min1=10000, max1=-100000, min2=10000, max2=-100000, min3=10000, max3=-100000,min4=10000, max4=-100000;
+			Iterator<Document> it1 = q.listOfDocuments.iterator();
+			while(it1.hasNext())
+			{
+				Document d = it1.next();
+				if(d.score1 > max1) max1 = d.score1; if(d.score2 > max2) max2 = d.score2;
+				if(d.score3 > max3) max3 = d.score3; if(d.score4 > max4) max4 = d.score4;
+				if(d.score1 < min1) min1 = d.score1; if(d.score2 < min2) min2 = d.score2;
+				if(d.score3 < min3) min3 = d.score3; if(d.score4 < min4) min4 = d.score4;
+			}
+			Iterator<Document> it2 = q.listOfDocuments.iterator();
+			while(it2.hasNext())
+			{
+				Document d = it2.next();
+				d.nScore1 = (d.score1 - min1)/(max1-min1);
+				d.nScore2 = (d.score2 - min2)/(max2-min2);
+				d.nScore3 = (d.score3 - min3)/(max3-min3);
+				d.nScore4 = (d.score4 - min4)/(max4-min4);
+				//System.out.println("----- "+d.nScore1+" "+d.nScore2+" "+d.nScore3+" "+d.nScore4);
+			}
+			
+			// now do the rest
+			
 			Collections.sort(q.listOfDocuments, new Comparator<Document>()  // REVERSE sort the arrayList, so that den of p is easy
 					{
 
 						public int compare(Document d1, Document d2) {
 							Double score1 = 0.0, score2 = 0.0;
-							if(i == 1) {score1 = d1.score1; score2=d2.score1;}
-							else if(i == 2) {score1 = d1.score2; score2=d2.score2;}
-							else if(i == 3) {score1 = d1.score3; score2=d2.score3;}
-							else if(i == 4) {score1 = d1.score4; score2=d2.score4;}
+							if(i == 1) {score1 = d1.nScore1; score2=d2.nScore1;}
+							else if(i == 2) {score1 = d1.nScore2; score2=d2.nScore2;}
+							else if(i == 3) {score1 = d1.nScore3; score2=d2.nScore3;}
+							else if(i == 4) {score1 = d1.nScore4; score2=d2.nScore4;}
 							else {System.out.println("Failed inside computePLScore in WorkWithResults error 1");System.exit(0);}
 							if(score1 < score2) return -1;
 							else if(score1 > score2) return 1;
@@ -64,14 +89,15 @@ public class WorkWithResults {
 				Document d = it.next();
 				double num = 0.0, currentScore = 0.0;
 				//System.out.println(d.score1+" "+d.score2+" "+d.score3+" "+d.score4);
-				if(i == 1) currentScore = d.score1; if(i == 2) currentScore = d.score2;
-				if(i == 3) currentScore = d.score3; if(i == 4) currentScore = d.score4;
+				if(i == 1) currentScore = d.nScore1; if(i == 2) currentScore = d.nScore2;
+				if(i == 3) currentScore = d.nScore3; if(i == 4) currentScore = d.nScore4;
 				num = currentScore;
 				denSum += currentScore;
-				prod *= (num/denSum);
+				//System.out.print("prod= "+prod+" ="+num+"/"+denSum+" check:"+q.qID);
+				if(num>0 && denSum>0) prod *= (num/denSum);
 			}
-			if(i==1) q.PL1 = prod; if(i==2) q.PL2 = prod;
-			if(i==3) q.PL3 = prod; if(i==4) q.PL4 = prod;
+			if(i==1) q.setPL1(prod); if(i==2) q.setPL2(prod);
+			if(i==3) q.setPL3(prod); if(i==4) q.setPL4(prod);
 			//System.out.print("For query: "+q.qID+" PL Prob= "+prod+"_____");
 		}
 		//System.out.println();
@@ -89,7 +115,7 @@ public class WorkWithResults {
 			if(q.nD==0) {System.out.println("SKIPPING...");continue;}
 			//System.out.println("Query: "+q.nD+"_"+q.listOfDocuments.get(0).docFeatures);
 			// now we want to calculate the disagreement score for query q
-			double Vij = 0.0;// Vij denotes the no of votes given by the 2 committee members that agree that doc i is to ranked higher than doc j
+			double Vij = 0.0;// Vij denoted the no of votes given by the 2 committee members that agree that doc i is to ranked higher than doc j
 			// for Vij we need to have a nested loop for iteration through pairs of docs.
 			/*Document[] docs = null;
 			docs = (Document[]) q.listOfDocuments.toArray(docs);*/
