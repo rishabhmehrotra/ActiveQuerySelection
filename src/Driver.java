@@ -165,14 +165,25 @@ public class Driver {
 				System.out.println("By Combine3"+nextByCombined3.disagreement+ "__"+nextByCombined3.normalizedDisagreement+"__"+nextByCombined3.currentAvgSimilarity+" "+nextByCombined3.combine+" "+nextByCombined3.combine2+" "+nextByCombined3.combine3+" NormalizedLDASim:"+nextByCombined3.normalizedLDASimilarity+" Min PL:"+nextByCombined3.avgPL);
 				System.out.println("By minAvgPL"+nextByPL.disagreement+ "__"+nextByPL.normalizedDisagreement+"__"+nextByPL.currentAvgSimilarity+" "+nextByPL.combine+" "+nextByPL.combine2+" "+nextByPL.combine3+" NormalizedLDASim:"+nextByPL.normalizedLDASimilarity+" Min PL:"+nextByPL.avgPL);
 				
-				d.base.add(nextByPL);
-				d.nBase++;
-				System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Max similarity query being removed which has minAvgPL= "+nextBySim.avgPL);
+				
+				//System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Max similarity query being removed which has minAvgPL= "+nextBySim.avgPL);
 				//System.out.println("---------- Query being removed now: "+next.qID+"_"+next.nD+"_"+next.disagreement+"_"+next.listOfDocuments.get(0));
 				// now we need to remove this particular selected NEXT query from the list of candidates
 				//System.out.println("Size before query removal from candidate set: "+d.nCandidateQ);
 				//removeQueryFromCandidateSet(next);
-				removeQueryFromCandidateSet(nextByPL);
+				if(batch%2==0)
+				{
+					d.base.add(nextByPL);
+					d.nBase++;
+					removeQueryFromCandidateSet(nextByPL);
+				}
+				else
+				{
+					d.base.add(next);
+					d.nBase++;
+					removeQueryFromCandidateSet(next);
+				}
+				
 				//System.out.println("Size after query removal from candidate set: "+d.nCandidateQ);
 				//System.out.println("Size of the new base set: "+d.base.size());
 			}
