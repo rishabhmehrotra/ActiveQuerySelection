@@ -129,12 +129,6 @@ public class QDataset {
 				this.candidates.add(this.listOfQueries[i]);
 			}
 		}
-		/*Iterator<Query> itr = this.candidates.iterator();
-		while(itr.hasNext())
-		{
-			Query q = itr.next();
-			System.out.println(q.qID+" Candidate set "+q.termString);
-		}*/
 		System.out.println("Candidates populated with "+candidates.size());
 	}
 
