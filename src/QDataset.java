@@ -27,8 +27,8 @@ public class QDataset {
 	public HashMap<String, HashMap<String, Float>> queryTerms;
 	public int numTopics = 10;
 	
-	public int batchSize = 10;
-	public int limit = 600;
+	public int batchSize = 20;
+	public int limit = 1018;
 
 	//public Query[] listOfCandidateQueries;
 	public int nCandidateQ;
@@ -92,13 +92,13 @@ public class QDataset {
 		{
 			String qID = line.substring(6, line.indexOf('.', 6));
 			String word = line.substring(line.indexOf('>')+1, line.indexOf('<', line.indexOf('>')));
-			System.out.println("Query: "+qID+"_"+word+"_");
+			//System.out.println("Query: "+qID+"_"+word+"_");
 			if(prevQID.compareTo(qID) != 0)
 			{
 				// this means this is a new qID, so create a new HashMap for this qID
 				// but first, put this hm into the queryTerms
 				if(justStarted == 1) {justStarted++;} else queryTerms.put(prevQID, hm);
-				System.out.println("Putting query "+prevQID +" into the hashmap with no of words: "+hm.size()+"\n\n");
+				//System.out.println("Putting query "+prevQID +" into the hashmap with no of words: "+hm.size()+"\n\n");
 				hm = new HashMap<String, Float>();
 
 				//q = new Query();

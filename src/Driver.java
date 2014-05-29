@@ -69,8 +69,8 @@ public class Driver {
 			// now that we have both the subsets, we have to train 2 models on these 2 subsets
 			new RunLearningAlgorithm(d.subset1,1);
 			new RunLearningAlgorithm(d.subset2,2);
-			new RunLearningAlgorithm(d.subset2,3);
-			new RunLearningAlgorithm(d.subset2,4);
+			new RunLearningAlgorithm(d.subset3,3);
+			new RunLearningAlgorithm(d.subset4,4);
 			// now we have both the models in the ensemble1/2.txt files, we need to measure the disagreement for each query among these 2 models
 			// the queries-doc pairs are present line by line in the test.txt file and corresponding lines in the predictions1/2.txt file contain the
 			// scores assigned by the models to each of these query-doc pairs..
