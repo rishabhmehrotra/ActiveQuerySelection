@@ -28,12 +28,13 @@ public class QDataset {
 	public int numTopics = 10;
 	
 	public int batchSize = 20;
-	public int limit = 1018;
+	public int limit = 1010;
 
 	//public Query[] listOfCandidateQueries;
 	public int nCandidateQ;
 	public int nBase;
 	public BuildLDAModel ldaModel;
+	public double sizeOfSubset = 0.5;
 	
 
 	public QDataset(String filename) throws IOException

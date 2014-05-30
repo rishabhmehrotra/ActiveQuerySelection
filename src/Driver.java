@@ -55,7 +55,7 @@ public class Driver {
 		{
 			//deleteBinFiles();
 			//obtain the two sample subsets of size sizeSubset
-			sizeSubset = (int) (0.5*d.nBase);
+			sizeSubset = (int) (d.sizeOfSubset*d.nBase);
 			d.subset1 = (ArrayList<Query>) randomSample(d.base,sizeSubset);
 			d.subset2 = (ArrayList<Query>) randomSample(d.base,sizeSubset);
 			d.subset3 = (ArrayList<Query>) randomSample(d.base,sizeSubset);
@@ -171,17 +171,17 @@ public class Driver {
 				// now we need to remove this particular selected NEXT query from the list of candidates
 				//System.out.println("Size before query removal from candidate set: "+d.nCandidateQ);
 				//removeQueryFromCandidateSet(next);
-				if(batch%2==0)
+				/*if(batch%2==0)
 				{
 					d.base.add(nextByPL);
 					d.nBase++;
 					removeQueryFromCandidateSet(nextByPL);
 				}
-				else
+				else*/
 				{
-					d.base.add(next);
+					d.base.add(nextByPL);
 					d.nBase++;
-					removeQueryFromCandidateSet(next);
+					removeQueryFromCandidateSet(nextByPL);
 				}
 				
 				//System.out.println("Size after query removal from candidate set: "+d.nCandidateQ);
