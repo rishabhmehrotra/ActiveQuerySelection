@@ -5,10 +5,16 @@ public class CalculateErrorBars {
 
 	public static void main(String[] args) throws IOException{
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_minAvgPL_50x10_correctPLFormula.txt"));
-		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_onlyNDisagreement_50x10_all committees correct.txt"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_onlyNDisagreement_50x10_all committees correct.txt"));
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_half PL half disagreement_50x10.txt"));
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_RANDOM_errorBars_minAvgPL_50x10_correctPLFormula.txt"));
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_onlyLDASim_50x10.txt"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_onlyDisagreement_1000CandidateSize.txt"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_byPL_1000CandidateSize_WrongRandom_CorrectOthers.txt"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_LDASim_WrongRandom_CorrectLDASim_1000Candidates.txt"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_halfPL_halfQBC_CorrectRandom_1000C.txt"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_RANDOM_errorBars_halfPL_halfQBC_CorrectRandom_1000C.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/Fold2Results/NDCG_errorBars_Sim_B50.txt"));
 		String line = br.readLine();
 		int prev = 0;
 		while(line!= null)

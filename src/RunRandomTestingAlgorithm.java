@@ -154,7 +154,7 @@ public class RunRandomTestingAlgorithm {
 			while(itr2.hasNext()){
 				Document d = itr2.next();
 				count++;
-				if(count==1) {DCG+= d.relevance;IDCG+= d.relevance;}
+				if(count==1) {DCG+= d.relevance;/*IDCG+= d.relevance;*/}
 				else
 				{
 					DCG+= (d.relevance/Math.log(count));

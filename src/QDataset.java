@@ -27,7 +27,7 @@ public class QDataset {
 	public HashMap<String, HashMap<String, Float>> queryTerms;
 	public int numTopics = 10;
 	
-	public int batchSize = 20;
+	public int batchSize = 10;
 	public int limit = 1010;
 
 	//public Query[] listOfCandidateQueries;

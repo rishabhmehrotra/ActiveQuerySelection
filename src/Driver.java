@@ -45,7 +45,7 @@ public class Driver {
 		//System.exit(0);
 		
 		
-		int N = 50;
+		int N = 100;
 		
 		int i,j,k,l,m;
 		int sizeDl = d.base.size();
@@ -81,9 +81,9 @@ public class Driver {
 			
 			
 			int batch = d.batchSize;
+			new QuerySimilarity(d);
 			while(batch>0)
 			{
-				new QuerySimilarity(d);
 				batch--;
 				// we need to normalize the disagreement to make it a value between 0 & 1
 				double maxDisagreement = 0, minDisagreement = 100000;
@@ -173,9 +173,9 @@ public class Driver {
 				//removeQueryFromCandidateSet(next);
 				/*if(batch%2==0)
 				{
-					d.base.add(nextByPL);
+					d.base.add(next);
 					d.nBase++;
-					removeQueryFromCandidateSet(nextByPL);
+					removeQueryFromCandidateSet(next);
 				}
 				else*/
 				{
