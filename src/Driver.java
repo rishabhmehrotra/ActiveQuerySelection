@@ -45,7 +45,7 @@ public class Driver {
 		//System.exit(0);
 		
 		
-		int N = 100;
+		int N = 45;
 		
 		int i,j,k,l,m;
 		int sizeDl = d.base.size();
@@ -196,19 +196,22 @@ public class Driver {
 			// now we have the new base set ready, we should extract the subset from it now and see how it performs
 			// also, we need code for converting scores to NDCG measure now...
 			new RunTestingAlgorithm(d.base, d);
-			double avg = 0;
-			for(int ii=0;ii<5;ii++)
+			double avg = 0, avgAP=0;
+			for(int ii=0;ii<10;ii++)
 			{
 				File dir = new File("src/data/LETOR/forEval/randomQ/");
 				for(File files: dir.listFiles()) files.delete();
 				populateRandomQueries();
 				new RunRandomTestingAlgorithm(d.randomQ, d);
 				avg += d.resultRandom;
+				avgAP += d.resultRandomAP;
 			}
 			FileWriter fstream = new FileWriter("src/data/LETOR/forEval/resultsAT10.txt", true);
 			BufferedWriter out = new BufferedWriter(fstream);
-			avg/= 5;
-			out.write("Average for this run: "+avg+"\n");
+			avg/= 10;
+			avgAP/= 10;
+			out.write("Average NDCG for this run: "+avg+"\n");
+			out.write("Average AP for this run: "+avgAP+"\n");
 			out.close();
 		}
 		

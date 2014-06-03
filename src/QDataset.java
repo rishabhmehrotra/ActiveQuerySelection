@@ -23,12 +23,12 @@ public class QDataset {
 	public ArrayList<Query> candidates;
 	public ArrayList<Query> test; // never updated yet from RunTestingAlgorithm
 	public ArrayList<Query> randomQ;
-	public double resultRandom, resultCandidates;
+	public double resultRandom, resultCandidates, resultRandomAP, resultCandidatesAP;
 	public HashMap<String, HashMap<String, Float>> queryTerms;
 	public int numTopics = 10;
 	
 	public int batchSize = 10;
-	public int limit = 1010;
+	public int limit = 450;
 
 	//public Query[] listOfCandidateQueries;
 	public int nCandidateQ;

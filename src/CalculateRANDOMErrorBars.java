@@ -7,7 +7,7 @@ public class CalculateRANDOMErrorBars {
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_minAvgPL_50x10_correctPLFormula.txt"));
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/Fold3/B10/NDCG_RANDOM_errorBars_B10_QBC-LDA-PL.txt"));
 		
-		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/Fold2Results/NDCG10_B10/NDCG_RANDOM_errorBars_B10_LDA.txt"));
+		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/NDCG_RANDOM_errorBars.txt"));
 		
 		
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_half PL half disagreement_50x10.txt"));
@@ -22,11 +22,11 @@ public class CalculateRANDOMErrorBars {
 			int flag = 0;
 			if(numQ == prev) ;//{line = br.readLine();continue;}
 			else prev = numQ;*/
-			int repeat = 5;
+			int repeat = 10;
 			double avg=0;
 			int c=0;
 			while(repeat>0)
-			{	if(repeat != 5)
+			{	if(repeat != 10)
 				{
 					line = br.readLine();
 					parts = line.split("\t");
@@ -47,7 +47,7 @@ public class CalculateRANDOMErrorBars {
 				repeat--;
 				
 			}
-			avg = avg/5;
+			avg = avg/10;
 			//System.out.println("avgNDCG: "+avg+" = "+avg);
 			// System.out.println("Calculating standard deviation now:");
 			double stdDev=0;

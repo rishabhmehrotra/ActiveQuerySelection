@@ -117,11 +117,15 @@ public class RunRandomTestingAlgorithm {
 		int thresNDGC = 10;
 		// sort the documents for each query in base
 		double avgNDCG=0.0;
-		int totalCount=0;
+		double avgAP=0.0;
+		int totalCount=0, count4AP=0;
 		Iterator<Query> itr = this.listTestQueries.iterator();
 		FileWriter fstream1 = new FileWriter("src/data/LETOR/NDCG_RANDOM_errorBars.txt", true);
 		BufferedWriter out1 = new BufferedWriter(fstream1);
 		out1.write(d.base.size()+"\t");
+		FileWriter fstream2 = new FileWriter("src/data/LETOR/AP_RANDOM_errorBars.txt", true);
+		BufferedWriter out2 = new BufferedWriter(fstream2);
+		out2.write(d.base.size()+"\t");
 		while(itr.hasNext())
 		{
 			Query q = itr.next();
@@ -147,6 +151,30 @@ public class RunRandomTestingAlgorithm {
 				if(d.relevance == 1) count1++;
 				if(d.relevance == 2) count2++;
 			}
+			
+			
+			Iterator<Document> itr4 = q.listOfDocuments.iterator();
+			int relevant=0, count3=0;
+			double AP=0.0;
+			while(itr4.hasNext())
+			{
+				Document d = itr4.next();
+				count3++;
+				if(d.relevance > 0) relevant++;
+				AP += (double) (relevant/count3);
+				System.out.println("relevance for this doc: "+d.relevance+"score: "+d.testScore+" AP+= "+relevant+" / "+count3);
+				if(count3 == 10) break;
+			}
+			System.out.println("AP: "+AP);
+			if(count3!=0)
+			{
+				AP = AP/count3;
+				q.AP = AP;
+				count4AP++;
+				avgAP += AP;
+				out2.write(AP+"\t");
+			}
+			
 			// now we have the documents for this query sorted
 			//System.out.print("qID:"+q.qID+"___");
 			Iterator<Document> itr2 = q.listOfDocuments.iterator();
@@ -202,17 +230,23 @@ public class RunRandomTestingAlgorithm {
 				avgNDCG += NDCG;totalCount++;
 				out1.write(NDCG+"\t");
 			}
+			//if(Double.isNaN(NDCG)) totalCount++;
 			//System.out.println("NDCG Score for Query "+q.qID+" is equal to "+q.NDCG);
 		}
 		out1.write("\n");
 		out1.close();
+		out2.write("\n");
+		out2.close();
 		System.out.println(avgNDCG);
 		avgNDCG = avgNDCG/totalCount;
+		avgAP = avgAP/count4AP;
 		d.resultRandom = avgNDCG;
+		d.resultRandomAP = avgAP;
 		
 		FileWriter fstream = new FileWriter("src/data/LETOR/forEval/resultsAT10.txt", true);
 		BufferedWriter out = new BufferedWriter(fstream);
-		out.write("avgNDCG for RANDOM training size of "+this.listTestQueries.size()+" queries= "+avgNDCG+"\n\n");
+		out.write("avgNDCG for RANDOM training size of "+this.listTestQueries.size()+" queries= "+avgNDCG+"\n");
+		out.write("avgAP for RANDOM training size of "+d.base.size()+" queries= "+avgAP+"\n\n");
 		out.close();
 		System.out.println("================= Average NDGC score for a total of "+this.listTestQueries.size()+" = "+totalCount+" RANDOM queries: "+avgNDCG);
 	}

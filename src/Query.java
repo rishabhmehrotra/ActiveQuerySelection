@@ -7,6 +7,7 @@ public class Query {
 	public Double disagreement;
 	public int qID;
 	public double NDCG;
+	public double AP;
 	public float currentAvgSimilarity;
 	public float similarityLDA;
 	public float normalizedSimilarity;
