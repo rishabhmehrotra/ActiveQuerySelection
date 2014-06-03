@@ -171,7 +171,7 @@ public class Driver {
 				// now we need to remove this particular selected NEXT query from the list of candidates
 				//System.out.println("Size before query removal from candidate set: "+d.nCandidateQ);
 				//removeQueryFromCandidateSet(next);
-				if(batch%3==1)
+				/*if(batch%3==1)
 				{
 					d.base.add(next);
 					d.nBase++;
@@ -183,11 +183,11 @@ public class Driver {
 					d.nBase++;
 					removeQueryFromCandidateSet(nextByLDASim);
 				}
-				else if(batch%3==2)
+				else if(batch%3==2)*/
 				{
-					d.base.add(nextByPL);
+					d.base.add(next);
 					d.nBase++;
-					removeQueryFromCandidateSet(nextByPL);
+					removeQueryFromCandidateSet(next);
 				}
 				
 				//System.out.println("Size after query removal from candidate set: "+d.nCandidateQ);
