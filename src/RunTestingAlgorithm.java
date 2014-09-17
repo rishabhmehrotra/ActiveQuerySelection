@@ -158,25 +158,33 @@ public class RunTestingAlgorithm {
 			if(count1 ==0 && count2 ==0) nonrelevant++;
 			total++;
 			
-			
-			Iterator<Document> itr4 = q.listOfDocuments.iterator();
-			int relevant=0, count3=0;
-			double AP=0.0;
-			while(itr4.hasNext())
+			if(count1 == 0 && count2 == 0) ;
+			else
 			{
-				Document d = itr4.next();
-				count3++;
-				if(d.relevance > 0) relevant++;
-				AP += (double) (relevant/count3);
-				System.out.println("relevance for this doc: "+d.relevance+"score: "+d.testScore+" AP+= "+relevant+" / "+count3);
-				if(count3 == 10) break;
+				Iterator<Document> itr4 = q.listOfDocuments.iterator();
+				int relevant=0, count3=0, numRel=0;
+				double AP=0.0;
+				while(itr4.hasNext())
+				{
+					Document d = itr4.next();
+					count3++;
+					if(d.relevance > 0)
+					{
+						relevant++;
+						AP += (double) (relevant/count3);
+						numRel++;
+					}
+					System.out.println("relevance for this doc: "+d.relevance+"score: "+d.testScore+" AP+= "+relevant+" / "+count3);
+					//if(count3 == 10) break;
+				}
+				System.out.println("AP: "+AP);
+				AP = AP/numRel;
+				q.AP = AP;
+				count4AP++;
+				avgAP += AP;
+				out2.write(AP+"\t");
 			}
-			System.out.println("AP: "+AP);
-			AP = AP/count3;
-			q.AP = AP;
-			count4AP++;
-			avgAP += AP;
-			out2.write(AP+"\t");
+			
 			
 			
 			// now we have the documents for this query sorted

@@ -13,9 +13,14 @@ public class CalculateErrorBars {
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_byPL_1000CandidateSize_WrongRandom_CorrectOthers.txt"));
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_LDASim_WrongRandom_CorrectLDASim_1000Candidates.txt"));
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_errorBars_halfPL_halfQBC_CorrectRandom_1000C.txt"));
-		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/NDCG_RANDOM_errorBars_halfPL_halfQBC_CorrectRandom_1000C.txt"));
-		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/Fold2Results/NDCG_errorBars_Sim_B50.txt"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Fold2/RANDOM_Combinedap"));
+		//src/data/LETOR/forEval/results/2008MQ/Fold5/NDCG_errorBars_LDA.txt"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Fold4/NDCG_errorBars_PL41.txt"));
+		
+		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_PL"));
 		String line = br.readLine();
+		//line = line+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1);
+		//System.out.println(line);
 		int prev = 0;
 		while(line!= null)
 		{
@@ -34,19 +39,23 @@ public class CalculateErrorBars {
 			//System.out.println("avgNDCG: "+avg+" = "+avg);
 			// System.out.println("Calculatign standard deviation now:");
 			double stdDev=0;
+			int c2=0;
 			for(int i=1;i<parts.length;i++)
 			{
 				double diff = Double.parseDouble(parts[i]) - avg;
 				//System.out.println("diff: "+Double.parseDouble(parts[i])+" - "+avg+" = "+diff);
 				stdDev += (diff*diff);
+				c2++;
 			}
 			stdDev = Math.sqrt(stdDev);
 			double error  = stdDev/c;
+			//System.out.println(c+"_"+c2+"_"+parts.length);
 			//stdDev /= c;
 			//System.out.print(stdDev+" ");
 			//System.out.print(avg+" ");
 			System.out.println((Integer.parseInt(parts[0]))+" "+avg+" "+error);
 			line= br.readLine();
+			//System.exit(0);
 		}
 		
 	}

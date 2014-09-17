@@ -9,11 +9,12 @@ public class Driver {
 	
 	public static QDataset d;
 	
-	public static void main(String args[]) throws IOException
+	public Driver() throws IOException
+	//public static void main(String args[]) throws IOException
 	{
 		System.out.println("Hello! World.");
 		
-		System.exit(0);
+		
 		
 		//String filename = "src/data/set2.train.txt";
 		String filename = "src/data/LETOR/train.txt";
@@ -45,7 +46,7 @@ public class Driver {
 		//System.exit(0);
 		
 		
-		int N = 45;
+		int N = 60;
 		
 		int i,j,k,l,m;
 		int sizeDl = d.base.size();
@@ -158,7 +159,7 @@ public class Driver {
 				
 				
 				System.out.println("------\nComparing Disagreement & Similarity:\nBy Disagreement "+next.disagreement+ "__"+next.normalizedDisagreement+ "__"+ next.currentAvgSimilarity+" "+next.combine+" "+next.combine2+" "+next.combine3+" NormalizedLDASim:"+next.normalizedLDASimilarity+" Min PL:"+next.avgPL);
-				System.out.println("By Similarity: "+nextBySim.disagreement+ "__"+nextBySim.normalizedDisagreement+"__"+nextBySim.currentAvgSimilarity+" "+nextBySim.combine +" "+nextBySim.combine2+" "+nextBySim.combine3+" NormalizedLDASim:"+nextBySim.normalizedLDASimilarity+" Min PL:"+nextBySim.avgPL);
+				//System.out.println("By Similarity: "+nextBySim.disagreement+ "__"+nextBySim.normalizedDisagreement+"__"+nextBySim.currentAvgSimilarity+" "+nextBySim.combine +" "+nextBySim.combine2+" "+nextBySim.combine3+" NormalizedLDASim:"+nextBySim.normalizedLDASimilarity+" Min PL:"+nextBySim.avgPL);
 				System.out.println("By LDANSimilarity: "+nextByLDASim.disagreement+ "__"+nextByLDASim.normalizedDisagreement+"__"+nextByLDASim.currentAvgSimilarity+" "+nextByLDASim.combine +" "+nextByLDASim.combine2+" "+nextByLDASim.combine3+" NormalizedLDASim:"+nextByLDASim.normalizedLDASimilarity+" Min PL:"+nextByLDASim.avgPL);
 				System.out.println("By Combine"+nextByCombined.disagreement+ "__"+nextByCombined.normalizedDisagreement+"__"+nextByCombined.currentAvgSimilarity+" "+nextByCombined.combine+" "+nextByCombined.combine2+" "+nextByCombined.combine3+" NormalizedLDASim:"+nextByCombined.normalizedLDASimilarity+" Min PL:"+nextByCombined.avgPL);
 				System.out.println("By Combine2"+nextByCombined2.disagreement+ "__"+nextByCombined2.normalizedDisagreement+"__"+nextByCombined2.currentAvgSimilarity+" "+nextByCombined2.combine+" "+nextByCombined2.combine2+" "+nextByCombined2.combine3+" NormalizedLDASim:"+nextByCombined2.normalizedLDASimilarity+" Min PL:"+nextByCombined2.avgPL);
