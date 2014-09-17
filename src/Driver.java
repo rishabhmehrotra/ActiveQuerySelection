@@ -13,7 +13,7 @@ public class Driver {
 	{
 		System.out.println("Hello! World.");
 		
-		
+		System.exit(0);
 		
 		//String filename = "src/data/set2.train.txt";
 		String filename = "src/data/LETOR/train.txt";
