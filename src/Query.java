@@ -12,6 +12,7 @@ public class Query {
 	public float similarityLDA;
 	public float normalizedSimilarity;
 	public float normalizedLDASimilarity;
+	public float ELScore;
 	
 	public HashMap<String, Float> termMap;
 	public String termString;
@@ -21,6 +22,7 @@ public class Query {
 	public Double combine2;
 	public Double combine3;
 	public double PL1, PL2, PL3, PL4, avgPL;
+	public float d1, d2, d3, d4, d;
 
 	public Query()
 	{
@@ -31,6 +33,8 @@ public class Query {
 		this.currentAvgSimilarity = 0;
 		this.normalizedDisagreement = 0.0;
 		this.PL1 = this.PL2 = this.PL3 = this.PL4 = 0.0;
+		this.ELScore = 0.0f;
+		this.d1 = this.d2 = this.d3 = this.d4 = this.d = 0.0f;
 		//listOfDocuments = new ArrayList<String>();
 		listOfDocuments = new ArrayList<Document>();
 	}
