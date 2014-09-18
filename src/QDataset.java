@@ -28,7 +28,7 @@ public class QDataset {
 	public int numTopics = 10;
 	
 	public int batchSize = 10;
-	public int limit = 1000;
+	public int limit = 400;
 
 	//public Query[] listOfCandidateQueries;
 	public int nCandidateQ;
@@ -54,10 +54,15 @@ public class QDataset {
 
 		
 		populateQueryTerms();
+		System.out.println("Done with populateQueryTerms...next: populateDataset");
 		populateDataset();
+		System.out.println("Done with populateDataset...next: addQueryTermsToQuery");
 		addQueryTermsToQuery();
+		System.out.println("Done with addQueryTermsToQuery...next: populateBase");
 		populateBase();
+		System.out.println("Done with populateBase...next: populateCandidates");
 		populateCandidates();
+		System.out.println("Done with populateCandidates....exiting QDataset");
 	}
 	
 	public void addQueryTermsToQuery()

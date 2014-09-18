@@ -2,15 +2,15 @@ import java.io.*;
 
 public class SuperDriver {
 
-	public static void main(String[] args) throws IOException {
-		int numIterations = 5;
+	public static void main(String[] args) throws Exception {
+		int numIterations = 1;
 		for(int i=0;i<numIterations;i++)
 		{
 			clean();
-			try
+			//try
 			{
 				new Driver();
-			} catch (Exception e) {System.err.println(e.toString());continue;}
+			} //catch (Exception e) {System.err.println(e.toString());continue;}
 		}
 	}
 	
