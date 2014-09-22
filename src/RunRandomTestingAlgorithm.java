@@ -169,7 +169,7 @@ public class RunRandomTestingAlgorithm {
 						AP += (double) (relevant/count3);
 						numRel++;
 					}
-					System.out.println("relevance for this doc: "+d.relevance+"score: "+d.testScore+" AP+= "+relevant+" / "+count3);
+					//System.out.println("relevance for this doc: "+d.relevance+"score: "+d.testScore+" AP+= "+relevant+" / "+count3);
 					//if(count3 == 10) break;
 				}
 				System.out.println("AP: "+AP);
