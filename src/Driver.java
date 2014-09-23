@@ -138,6 +138,10 @@ public class Driver {
 					//System.out.println(q.PL1+" "+q.PL2+" "+q.PL3+" "+q.PL4);
 					double avgPL = q.PL1+q.PL2+q.PL3+q.PL4;
 					avgPL /= 4;
+					// the query which has the least maximum PL among the 4 rankers will be selected
+					double maxPL = getMax(q.PL1,q.PL2,q.PL3,q.PL4);
+					avgPL = maxPL;
+					
 					q.avgPL = avgPL;
 					//System.out.println("avg PL:"+avgPL+" query:"+q.qID);
 					if(q.avgPL < minPL) {minPL = q.avgPL; nextByPL = q;}
@@ -160,22 +164,13 @@ public class Driver {
 				//if(nextByCombined2 == null) {removeQueryFromCandidateSet(nextByCombined2);batch++; continue;}
 				
 				
-				System.out.println("------\nComparing Disagreement & Similarity:\nBy Disagreement "+next.disagreement+ "__"+
-				next.normalizedDisagreement+ "__"+ 
-						next.currentAvgSimilarity+" "+
-				next.combine+" "+
-						next.combine2+" "+
-				
-						next.combine3+" NormalizedLDASim:"+
-						next.normalizedLDASimilarity+" Min PL:"+
-						next.avgPL+" MaxELO:"
-				+nextByELO.ELScore);
+				System.out.println("------\nComparing Disagreement & Similarity:\nBy Disagreement "+next.disagreement+ "__"+next.normalizedDisagreement+ "__"+ next.currentAvgSimilarity+" "+next.combine+" "+next.combine2+" "+next.combine3+" NormalizedLDASim:"+next.normalizedLDASimilarity+" Min PL:"+next.avgPL+" MaxELO:"+nextByELO.ELScore);
 				//System.out.println("By Similarity: "+nextBySim.disagreement+ "__"+nextBySim.normalizedDisagreement+"__"+nextBySim.currentAvgSimilarity+" "+nextBySim.combine +" "+nextBySim.combine2+" "+nextBySim.combine3+" NormalizedLDASim:"+nextBySim.normalizedLDASimilarity+" Min PL:"+nextBySim.avgPL);
 				//System.out.println("By LDANSimilarity: "+nextByLDASim.disagreement+ "__"+nextByLDASim.normalizedDisagreement+"__"+nextByLDASim.currentAvgSimilarity+" "+nextByLDASim.combine +" "+nextByLDASim.combine2+" "+nextByLDASim.combine3+" NormalizedLDASim:"+nextByLDASim.normalizedLDASimilarity+" Min PL:"+nextByLDASim.avgPL+" MaxELO:"+nextByELO.ELScore);
 				//System.out.println("By Combine"+nextByCombined.disagreement+ "__"+nextByCombined.normalizedDisagreement+"__"+nextByCombined.currentAvgSimilarity+" "+nextByCombined.combine+" "+nextByCombined.combine2+" "+nextByCombined.combine3+" NormalizedLDASim:"+nextByCombined.normalizedLDASimilarity+" Min PL:"+nextByCombined.avgPL+" MaxELO:"+nextByELO.ELScore);
 				//System.out.println("By Combine2"+nextByCombined2.disagreement+ "__"+nextByCombined2.normalizedDisagreement+"__"+nextByCombined2.currentAvgSimilarity+" "+nextByCombined2.combine+" "+nextByCombined2.combine2+" "+nextByCombined2.combine3+" NormalizedLDASim:"+nextByCombined2.normalizedLDASimilarity+" Min PL:"+nextByCombined2.avgPL+" MaxELO:"+nextByELO.ELScore);
 				//System.out.println("By Combine3"+nextByCombined3.disagreement+ "__"+nextByCombined3.normalizedDisagreement+"__"+nextByCombined3.currentAvgSimilarity+" "+nextByCombined3.combine+" "+nextByCombined3.combine2+" "+nextByCombined3.combine3+" NormalizedLDASim:"+nextByCombined3.normalizedLDASimilarity+" Min PL:"+nextByCombined3.avgPL+" MaxELO:"+nextByELO.ELScore);
-				//System.out.println("By minAvgPL"+nextByPL.disagreement+ "__"+nextByPL.normalizedDisagreement+"__"+nextByPL.currentAvgSimilarity+" "+nextByPL.combine+" "+nextByPL.combine2+" "+nextByPL.combine3+" NormalizedLDASim:"+nextByPL.normalizedLDASimilarity+" Min PL:"+nextByPL.avgPL+" MaxELO:"+nextByELO.ELScore);
+				System.out.println("By minAvgPL"+nextByPL.disagreement+ "__"+nextByPL.normalizedDisagreement+"__"+nextByPL.currentAvgSimilarity+" "+nextByPL.combine+" "+nextByPL.combine2+" "+nextByPL.combine3+" NormalizedLDASim:"+nextByPL.normalizedLDASimilarity+" Min PL:"+nextByPL.avgPL+" MaxELO:"+nextByELO.ELScore);
 				System.out.println("By maxELO"+nextByELO.disagreement+ "__"+nextByELO.normalizedDisagreement+"__"+nextByELO.currentAvgSimilarity+" "+nextByELO.combine+" "+nextByELO.combine2+" "+nextByELO.combine3+" NormalizedLDASim:"+nextByELO.normalizedLDASimilarity+" Min PL:"+nextByELO.avgPL+" MaxELO:"+nextByELO.ELScore);
 				
 				
@@ -203,8 +198,10 @@ public class Driver {
 					removeQueryFromCandidateSet(next);
 				}*/
 				d.base.add(nextByELO);
+				//d.base.add(nextByPL);
 				d.nBase++;
 				removeQueryFromCandidateSet(nextByELO);
+				//removeQueryFromCandidateSet(nextByPL);
 				
 				
 				//System.out.println("Size after query removal from candidate set: "+d.nCandidateQ);
@@ -246,6 +243,15 @@ public class Driver {
 		System.out.println("Final Results: Random: "+d.resultRandom+" Candidates: "+d.resultCandidates);
 	}
 	
+	public double getMax(double p1, double p2, double p3, double p4) {
+		// TODO Auto-generated method stub
+		if(p1 > p2 && p1 > p3 && p1 > p4) return p1;
+		if(p2 > p1 && p2 > p3 && p2 > p4) return p2;
+		if(p3 > p1 && p3 > p2 && p3 > p4) return p3;
+		if(p4 > p1 && p4 > p2 && p4 > p3) return p4;
+		return 0;
+	}
+
 	public static void populateQueryTermsToLDAFile() throws IOException
 	{
 		int c =0;
