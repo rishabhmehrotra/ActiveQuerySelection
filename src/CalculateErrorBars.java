@@ -17,7 +17,8 @@ public class CalculateErrorBars {
 		//src/data/LETOR/forEval/results/2008MQ/Fold5/NDCG_errorBars_LDA.txt"));
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Fold4/NDCG_errorBars_PL41.txt"));
 		
-		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_PL"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_ELO"));
+		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/COMBINED_PL_minmax_2"));
 		String line = br.readLine();
 		//line = line+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1);
 		//System.out.println(line);

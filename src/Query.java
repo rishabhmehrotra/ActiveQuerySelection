@@ -22,6 +22,8 @@ public class Query {
 	public Double combine2;
 	public Double combine3;
 	public double PL1, PL2, PL3, PL4, avgPL;
+	public double normalizedAvgPL;
+
 	public float d1, d2, d3, d4, d;
 
 	public Query()
@@ -126,5 +128,13 @@ public class Query {
 
 	public void setAvgPL(double avgPL) {
 		this.avgPL = avgPL;
+	}
+	
+	public double getNormalizedAvgPL() {
+		return normalizedAvgPL;
+	}
+
+	public void setNormalizedAvgPL(double normalizedAvgPL) {
+		this.normalizedAvgPL = normalizedAvgPL;
 	}
 }

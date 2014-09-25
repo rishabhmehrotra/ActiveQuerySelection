@@ -28,7 +28,7 @@ public class QDataset {
 	public int numTopics = 10;
 	
 	public int batchSize = 10;
-	public int limit = 400;
+	public int limit = 500;
 
 	//public Query[] listOfCandidateQueries;
 	public int nCandidateQ;
