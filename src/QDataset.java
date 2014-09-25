@@ -25,10 +25,10 @@ public class QDataset {
 	public ArrayList<Query> randomQ;
 	public double resultRandom, resultCandidates, resultRandomAP, resultCandidatesAP;
 	public HashMap<String, HashMap<String, Float>> queryTerms;
-	public int numTopics = 10;
+	public int numTopics = 10;// if you change the numTopics here, make sure you change the size of topic proportion array in Query constructor
 	
 	public int batchSize = 10;
-	public int limit = 500;
+	public int limit = 1010;
 
 	//public Query[] listOfCandidateQueries;
 	public int nCandidateQ;

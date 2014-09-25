@@ -13,6 +13,7 @@ public class Query {
 	public float normalizedSimilarity;
 	public float normalizedLDASimilarity;
 	public float ELScore;
+	public float topiclistSimilarity;
 	
 	public HashMap<String, Float> termMap;
 	public String termString;
@@ -23,6 +24,8 @@ public class Query {
 	public Double combine3;
 	public double PL1, PL2, PL3, PL4, avgPL;
 	public double normalizedAvgPL;
+	
+	public double topicProportions[];
 
 	public float d1, d2, d3, d4, d;
 
@@ -136,5 +139,13 @@ public class Query {
 
 	public void setNormalizedAvgPL(double normalizedAvgPL) {
 		this.normalizedAvgPL = normalizedAvgPL;
+	}
+	
+	public double[] getTopicProportions() {
+		return topicProportions;
+	}
+
+	public void setTopicProportions(double[] topicProportions) {
+		this.topicProportions = topicProportions;
 	}
 }

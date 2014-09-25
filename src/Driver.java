@@ -36,6 +36,8 @@ public class Driver {
 			testing.addThruPipe(new Instance(q.termString, null, "test instance", null));
 		}
 		
+		LDATopicWiseQuerySampling topicwise = new LDATopicWiseQuerySampling(d);
+		System.exit(0);
 
 		/*TopicInferencer inferencer = d.ldaModel.model.getInferencer();
 		for(int y = 0; y<200;y++)
@@ -221,7 +223,7 @@ public class Driver {
 				
 				//System.out.println("Size after query removal from candidate set: "+d.nCandidateQ);
 				//System.out.println("Size of the new base set: "+d.base.size());
-			}
+			} // end of while(batch>0)
 			// now we have the new base set ready, we should extract the subset from it now and see how it performs
 			// also, we need code for converting scores to NDCG measure now...
 			new RunTestingAlgorithm(d.base, d);
