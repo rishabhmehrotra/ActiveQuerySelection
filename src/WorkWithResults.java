@@ -98,7 +98,7 @@ public class WorkWithResults {
 			}
 			if(i==1) q.setPL1(prod); if(i==2) q.setPL2(prod);
 			if(i==3) q.setPL3(prod); if(i==4) q.setPL4(prod);
-			//System.out.print("For query: "+q.qID+" PL Prob= "+prod+"_____");
+			//System.out.println("For query: "+q.qID+" PL Prob= "+prod+"_____");
 		}
 		//System.out.println();
 	}

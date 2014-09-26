@@ -36,8 +36,8 @@ public class Driver {
 			testing.addThruPipe(new Instance(q.termString, null, "test instance", null));
 		}
 		
-		LDATopicWiseQuerySampling topicwise = new LDATopicWiseQuerySampling(d);
-		System.exit(0);
+		
+		//System.exit(0);
 
 		/*TopicInferencer inferencer = d.ldaModel.model.getInferencer();
 		for(int y = 0; y<200;y++)
@@ -57,7 +57,7 @@ public class Driver {
 		int i,j,k,l,m;
 		int sizeDl = d.base.size();
 		int sizeSubset = (int) (0.5*sizeDl);
-		
+		int temp =1;
 		for(i=1;i<=N;i++)
 		{
 			//deleteBinFiles();
@@ -68,28 +68,48 @@ public class Driver {
 			d.subset3 = (ArrayList<Query>) randomSample(d.base,sizeSubset);
 			d.subset4 = (ArrayList<Query>) randomSample(d.base,sizeSubset);
 			// make the training files for both the subsets
+			
 			prepareTrainFiles(d.subset1,1);
 			prepareTrainFiles(d.subset2,2);
 			prepareTrainFiles(d.subset3,3);
 			prepareTrainFiles(d.subset4,4);
 			prepareCandidateFile(d.candidates);
+			
 			// now that we have both the subsets, we have to train 2 models on these 2 subsets
-			new RunLearningAlgorithm(d.subset1,1);
-			new RunLearningAlgorithm(d.subset2,2);
-			new RunLearningAlgorithm(d.subset3,3);
-			new RunLearningAlgorithm(d.subset4,4);
+			if(temp==1) new RunLearningAlgorithm(d.subset1,1);
+			if(temp==1) new RunLearningAlgorithm(d.subset2,2);
+			if(temp==1) new RunLearningAlgorithm(d.subset3,3);
+			if(temp==1) new RunLearningAlgorithm(d.subset4,4);
+			
 			// now we have both the models in the ensemble1/2.txt files, we need to measure the disagreement for each query among these 2 models
 			// the queries-doc pairs are present line by line in the test.txt file and corresponding lines in the predictions1/2.txt file contain the
 			// scores assigned by the models to each of these query-doc pairs..
 			// we now need to store these results in a data structure by reading line by line both these files
-			new WorkWithResults("src/data/LETOR/candidate.txt",1, d, "src/data/LETOR/predictions1.txt", "src/data/LETOR/predictions2.txt", "src/data/LETOR/predictions3.txt", "src/data/LETOR/predictions4.txt");
+			if(temp==1) new WorkWithResults("src/data/LETOR/candidate.txt",1, d, "src/data/LETOR/predictions1.txt", "src/data/LETOR/predictions2.txt", "src/data/LETOR/predictions3.txt", "src/data/LETOR/predictions4.txt");
 			// so now we have all the test queries populated with their respective scores from each of the models learnt
 			// and we have populated the disagreement scores for all the queries...we now have to find query with maximum vote entropy/disagreement
 			
 			
 			int batch = d.batchSize;
-			new QuerySimilarity(d);
-			new ELO(d);
+			if(temp==1) new QuerySimilarity(d);
+			if(temp==1) new ELO(d);
+			
+			LDATopicWiseQuerySampling topicwise = new LDATopicWiseQuerySampling(d);
+			//ArrayList<Query> top10 = topicwise.computeTopicWiseSimilarity();
+			ArrayList<Query> top10 = topicwise.getMinMaxPLQueryFromTopics();
+			System.out.println("--------Obtained top10...");
+			for(int ii=0;ii<top10.size();ii++)
+			{
+				Query q = top10.get(ii);
+				System.out.println(d.base.size());
+				d.base.add(q);
+				System.out.println(d.base.size());
+				d.nBase++;
+				System.out.println(d.candidates.size());
+				removeQueryFromCandidateSet(q);
+				System.out.println(d.candidates.size());
+			}
+			batch = 0;//if running experiments with topic based sampling
 			while(batch>0)
 			{
 				batch--;
