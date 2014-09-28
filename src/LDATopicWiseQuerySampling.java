@@ -62,7 +62,7 @@ public class LDATopicWiseQuerySampling {
 				if(qMaxPL < min_qMaxPL)
 				{
 					min_qMaxPL = qMaxPL;minPLQ = q;
-					System.out.println("new min found_"+min_qMaxPL+ "_for query: "+ q.qID);
+					//System.out.println("new min found_"+min_qMaxPL+ "_for query: "+ q.qID);
 				}
 				//if(qMaxPL > max_qMaxPL) max_qMaxPL = qMaxPL;
 			}
@@ -71,9 +71,9 @@ public class LDATopicWiseQuerySampling {
 			this.topiclistMap.put(new Integer(i), topiclist);
 			top10.add(minPLQ);
 			if(top10.size()==d.numTopics) break;
-			System.out.println("adding query to top10;qID= :"+minPLQ.qID+" ---------------------------------------- from topic "+i);
+			//System.out.println("adding query to top10;qID= :"+minPLQ.qID+" ---------------------------------------- from topic "+i);
 		}// end of for loop for 1-10 10=d.numTopics
-		System.exit(0);
+		//System.exit(0);
 		return top10;
 	}
 	
@@ -156,7 +156,7 @@ public class LDATopicWiseQuerySampling {
 			TopicInferencer inferencer = d.ldaModel.model.getInferencer();
 			double[] testProb1 = inferencer.getSampledDistribution(testing.get(0), d.numTopics, 1, 5);	
 			q.setTopicProportions(testProb1);
-			System.out.println(testProb1[0]+"_"+testProb1[1]+"_"+testProb1[2]+"_"+testProb1[3]+"_");
+			//System.out.println(testProb1[0]+"_"+testProb1[1]+"_"+testProb1[2]+"_"+testProb1[3]+"_");
 			c++;
 		}
 		System.out.println("Topic Proportions populated for "+c+" quries.");

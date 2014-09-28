@@ -92,7 +92,7 @@ public class Driver {
 			
 			int batch = d.batchSize;
 			if(temp==1) new QuerySimilarity(d);
-			if(temp==1) new ELO(d);
+			//if(temp==1) new ELO(d);
 			
 			LDATopicWiseQuerySampling topicwise = new LDATopicWiseQuerySampling(d);
 			//ArrayList<Query> top10 = topicwise.computeTopicWiseSimilarity();
@@ -109,7 +109,7 @@ public class Driver {
 				removeQueryFromCandidateSet(q);
 				System.out.println(d.candidates.size());
 			}
-			batch = 0;//if running experiments with topic based sampling
+			batch = 0;//if running experiments with topic based sampling, we just use the top10 Query list returned by the function and add them directly to the base set 
 			while(batch>0)
 			{
 				batch--;
