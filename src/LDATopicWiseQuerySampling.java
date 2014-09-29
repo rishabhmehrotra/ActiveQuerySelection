@@ -31,6 +31,89 @@ public class LDATopicWiseQuerySampling {
 		populateQueryTopicProportions();
 		populateTopicWiseQueryList();
 	}
+
+	public ArrayList<Query> getMinMaxPLQueryFromTopics_TopLDASim()//min-max from each topic
+	{
+		ArrayList<Query> top10 = new ArrayList<Query>();
+		HashMap<Integer, ArrayList<Query>> topSimilarQ = new HashMap<Integer, ArrayList<Query>>();
+		for(int i=1;i<=d.numTopics;i++)
+		{
+			ArrayList<Query> topSim = new ArrayList<Query>();
+			ArrayList<Query> topiclist = this.topiclistMap.get(new Integer(i));
+			
+			// the idea is that we will create a new array list with all queries from this topic along with their LDA similarity scores
+			// and then sort it and use the top 10 to select via PL probability
+			
+			float maxTopiclistSim = -1000;Query maxQ = null;
+			Iterator<Query> itr = topiclist.iterator();
+			while(itr.hasNext())
+			{
+				Query q1 = itr.next();
+				if(q1.qID==0) continue;
+				double[] testProb1 = q1.getTopicProportions();
+				Iterator<Query> itr2 = topiclist.iterator();
+				int c = 0; float sumSim = 0;
+				while(itr2.hasNext())
+				{
+					Query q2 = itr2.next();
+					if(q2.qID==0) continue;
+					if(q1.qID != q2.qID)
+					{
+						float sim = 0; float num = 0, d1=0,d2=0;
+						double[] testProb2 = q2.getTopicProportions();//inferencer.getSampledDistribution(testing.get(1), d.numTopics, 1, 5);
+						// now compute cosine similarity between these LDA Topic distributions between both the queries
+						for(int j=0;j<d.numTopics;j++)
+				    	{
+							num += (float) (testProb1[j]*testProb2[j]);
+							d1 += (testProb1[j]*testProb1[j]);
+							d2 += (testProb2[j]*testProb2[j]);
+				    	}
+						float den = (float) (Math.sqrt(d1)*Math.sqrt(d2));
+						sim = num/den;
+						//System.out.println("LDA Similarity Score:"+sim+"for queries: "+q1.qID+"_"+q1.termString+"___________________________"+q2.qID+" "+q2.termString);
+						sumSim+= sim;
+						c++;
+					}
+				}
+				q1.topiclistSimilarity = sumSim/c;
+				topSim.add(q1);
+			}
+			
+			// now we have all the queries of this topic with their similarity scores in the array list topSim
+			// now sort this array list and pick one from the top 10
+			
+			Collections.sort(topSim, new Comparator<Query>()  
+					{
+
+						public int compare(Query q1, Query q2) {
+							if(q1.topiclistSimilarity < q2.topiclistSimilarity) return 1;
+							else if(q1.topiclistSimilarity > q2.topiclistSimilarity) return -1;
+							else return 0;
+						}
+					  
+					});
+			
+			// now just look at the top 10 (say) queries and pick one which has the least min-max PL probability
+			double max_qMaxPL = -1000, min_qMaxPL = 1000;
+			Query minPLQ = null;
+			for(int j=0;j<10;j++)
+			{
+				Query q = topSim.get(j);
+				if(q.qID==0) continue;
+				double qMaxPL = getMax(q.PL1,q.PL2,q.PL3,q.PL4);
+				
+				if(qMaxPL < min_qMaxPL)
+				{
+					min_qMaxPL = qMaxPL;minPLQ = q;
+					//System.out.println("new min found_"+min_qMaxPL+ "_for query: "+ q.qID);
+				}
+			}
+			top10.add(minPLQ);
+			topiclist.remove(minPLQ);
+			this.topiclistMap.put(new Integer(i), topiclist);
+		}
+		return top10;
+	}
 	
 	public ArrayList<Query> getMinMaxPLQueryFromTopics()//min-max from each topic
 	{

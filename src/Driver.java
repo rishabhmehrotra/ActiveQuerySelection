@@ -96,7 +96,8 @@ public class Driver {
 			
 			LDATopicWiseQuerySampling topicwise = new LDATopicWiseQuerySampling(d);
 			//ArrayList<Query> top10 = topicwise.computeTopicWiseSimilarity();
-			ArrayList<Query> top10 = topicwise.getMinMaxPLQueryFromTopics();
+			//ArrayList<Query> top10 = topicwise.getMinMaxPLQueryFromTopics();
+			ArrayList<Query> top10 = topicwise.getMinMaxPLQueryFromTopics_TopLDASim();
 			System.out.println("--------Obtained top10...");
 			for(int ii=0;ii<top10.size();ii++)
 			{
