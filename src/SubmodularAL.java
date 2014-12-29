@@ -12,16 +12,17 @@ public class SubmodularAL {
 	public SubmodularAL(QDataset d)
 	{
 		this.d = d;
-		populateQueryTopicProportions();
 		populateV();
+		populateQueryTopicProportions();
+		
 		// we now have each query's LDA topics
-		populateL();
+		calculateL();
 		populateR();
 	}
 
 	
 
-	public void populateL()
+	public void calculateL()
 	{
 		// in this function we need to populate the L function of the submodular function
 		// for each query, we would need to calculate the L score
@@ -40,7 +41,9 @@ public class SubmodularAL {
 				sim = getQueryPairLDASimilarity(q1, q2);
 				q1.wWithOthers+=sim;
 			}
+			System.out.println("wWithOthers: "+q1.wWithOthers);
 		}
+		
 		
 		// now we iterate through the candidate list to form potential subsets S
 		double L=0;
@@ -56,6 +59,7 @@ public class SubmodularAL {
 				Query qj = itr2.next();
 				qi.wWithBase += getQueryPairLDASimilarity(qi, qj);
 			}
+			System.out.println("wWithBase: "+qi.wWithOthers);
 		}
 		
 		Iterator<Query> itrS = d.candidates.iterator();
@@ -71,14 +75,17 @@ public class SubmodularAL {
 				cS = qi.wWithBase + getQueryPairLDASimilarity(qi, qS);
 				cV = qi.wWithOthers;
 				L += Math.min(cS, alpha*cV);
+				System.out.println("cS: "+cS+" cV: "+cV);
 			}
 			// now for this set (base+qS) we have the L score
 			qS.LScore = L;
+			System.out.println("LSCORE ========================== "+L);
 		}
 	}
 
 	public void populateV()
 	{
+		d.V = new ArrayList<Query>();
 		Iterator<Query> itr1 = d.candidates.iterator();
 		while(itr1.hasNext())
 		{
@@ -92,11 +99,12 @@ public class SubmodularAL {
 			d.V.add(qj);
 		}
 		System.out.println("Populated all query list V with "+d.V.size()+" queries.");
+		//System.exit(0);
 	}
 
 	public void populateQueryTopicProportions()
 	{
-		Iterator<Query> itr = d.candidates.iterator();
+		Iterator<Query> itr = d.V.iterator();
 		int c = 0;
 		while(itr.hasNext())
 		{
@@ -118,12 +126,17 @@ public class SubmodularAL {
 		double num = 0, d1=0,d2=0;
 		for(int j=0;j<d.numTopics;j++)
 		{
+			//System.out.print(q1.topicProportions[j]+"-------");
 			num += (float) (q1.topicProportions[j]*q2.topicProportions[j]);
 			d1 += (q1.topicProportions[j]*q1.topicProportions[j]);
 			d2 += (q2.topicProportions[j]*q2.topicProportions[j]);
 		}
+		//System.out.println();
 		double den = (double) (Math.sqrt(d1)*Math.sqrt(d2));
+		//System.out.println("num:"+num+" den:"+den);
+		//if(num ==0 || den==0) System.out.println(q1.topicProportions[0]+" "+q2.topicProportions[0]);
 		sim = num/den;
+		if(sim>10000) {System.out.println("inside getQueryPairLDASimilarity in Submodular class, NaN similarity case happened");System.exit(0);}
 		return sim;
 	}
 

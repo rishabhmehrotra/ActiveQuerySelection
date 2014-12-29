@@ -27,7 +27,7 @@ public class Query {
 	public double PL1, PL2, PL3, PL4, avgPL;
 	public double normalizedAvgPL;
 	
-	public double topicProportions[];
+	public double topicProportions[] = new double[10];
 
 	public float d1, d2, d3, d4, d;
 
@@ -148,6 +148,8 @@ public class Query {
 	}
 
 	public void setTopicProportions(double[] topicProportions) {
-		this.topicProportions = topicProportions;
+		for(int i=0;i<10;i++)
+			this.topicProportions[i] = topicProportions[i];
+		//this.topicProportions = topicProportions;
 	}
 }
