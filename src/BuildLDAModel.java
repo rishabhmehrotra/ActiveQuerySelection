@@ -52,7 +52,8 @@ public class BuildLDAModel {
 	public InstanceList instances;
 	public ParallelTopicModel model;
 
-	public BuildLDAModel(QDataset d) throws IOException {
+	public BuildLDAModel(QDataset d) throws IOException
+	{
 		
 		this.NUM_TOPICS = d.numTopics;
 		
@@ -114,5 +115,4 @@ public class BuildLDAModel {
 			System.out.println("DONE!");
 		}
 	}
-
 }

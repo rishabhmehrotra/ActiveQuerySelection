@@ -14,6 +14,8 @@ public class Query {
 	public float normalizedLDASimilarity;
 	public float ELScore;
 	public float topiclistSimilarity;
+	public double wWithOthers, wWithBase;//for the submodular part L
+	public double LScore, RScore, FScore;
 	
 	public HashMap<String, Float> termMap;
 	public String termString;

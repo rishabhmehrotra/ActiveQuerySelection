@@ -26,6 +26,7 @@ public class QDataset {
 	public double resultRandom, resultCandidates, resultRandomAP, resultCandidatesAP;
 	public HashMap<String, HashMap<String, Float>> queryTerms;
 	public int numTopics = 10;// if you change the numTopics here, make sure you change the size of topic proportion array in Query constructor
+	public ArrayList<Query> V;// the set of all queries, for submodular part: base+candidate list
 	
 	public int batchSize = 10;
 	public int limit = 1010;
