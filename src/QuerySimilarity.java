@@ -58,7 +58,7 @@ public class QuerySimilarity {
 					c++;
 				}
 			}
-			q1.similarityLDA = sumSim/c;
+			q1.similarityLDA = sumSim/c;//this is the avg LDA similarity with the rest of the candidates
 			//if(sumSim == 0) {zeroDist++;if(zeroDist > 5) System.out.println("\n\n*************\n\nZeroDIstance: qid:"+q1.qID);}
 			//System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Avg LDA sim for query "+q1.qID+" is: "+q1.similarityLDA);
 		}

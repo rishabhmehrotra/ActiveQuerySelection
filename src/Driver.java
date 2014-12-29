@@ -94,6 +94,12 @@ public class Driver {
 			if(temp==1) new QuerySimilarity(d);
 			//if(temp==1) new ELO(d);
 			
+			
+			
+			/*
+			//=========================================================================
+			// START: this part of code does a heuristic combination of LDA & PL model
+			//=========================================================================
 			LDATopicWiseQuerySampling topicwise = new LDATopicWiseQuerySampling(d);
 			//ArrayList<Query> top10 = topicwise.computeTopicWiseSimilarity();
 			//ArrayList<Query> top10 = topicwise.getMinMaxPLQueryFromTopics();
@@ -110,7 +116,12 @@ public class Driver {
 				removeQueryFromCandidateSet(q);
 				System.out.println(d.candidates.size());
 			}
-			batch = 0;//if running experiments with topic based sampling, we just use the top10 Query list returned by the function and add them directly to the base set 
+			//=========================================================================
+			// END: this part of code does a heuristic combination of LDA & PL model; -> set batch = 0 so that rest code doesn't run <-
+			//=========================================================================
+			*/
+			
+			//batch = 0;//if running experiments with topic based sampling, we just use the top10 Query list returned by the function and add them directly to the base set 
 			while(batch>0)
 			{
 				batch--;
