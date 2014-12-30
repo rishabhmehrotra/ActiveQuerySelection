@@ -53,7 +53,7 @@ public class Driver {
 		//System.exit(0);
 		
 		
-		int N = 50;
+		int N = 40;
 		
 		int i,j,k,l,m;
 		int sizeDl = d.base.size();

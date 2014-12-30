@@ -7,7 +7,7 @@ import cc.mallet.types.InstanceList;
 public class SubmodularAL {
 
 	public QDataset d;
-	public double alpha = 0.9;
+	public double alpha = 0.8;
 
 	public SubmodularAL(QDataset d)
 	{
