@@ -7,20 +7,68 @@ import cc.mallet.types.InstanceList;
 public class SubmodularAL {
 
 	public QDataset d;
-	public double alpha = 0.5;
+	public double alpha = 0.9;
 
 	public SubmodularAL(QDataset d)
 	{
 		this.d = d;
 		populateV();
-		populateQueryTopicProportions();
+		populateQueryTopicProportionsForV();
 		
 		// we now have each query's LDA topics
 		calculateL();
-		populateR();
+		calculateR();
 	}
 
+	public void calculateR()
+	{
+		// pre-compute base set's values per topic
+		// we dont need to actually know which base query belongs to which specific topic, we just need the topic wise sum of Rj
+		populateQueryTopicProportionsForBase();
+		double sum[] = new double[10];
+		Iterator<Query> itr1 = d.base.iterator();
+		while(itr1.hasNext())
+		{
+			Query qi = itr1.next();
+			int topic = getMaxLDATopic(qi);
+			sum[topic] += qi.disagreement;
+		}
+		// now for each of the K topics we have precomputed the values which later will be inside the square root
+		// now proceeding for the each query in consideration from the candidate set
+		Iterator<Query> itr2 = d.candidates.iterator();
+		while(itr2.hasNext())
+		{
+			double R=0;
+			Query qj = itr2.next();
+			// now get the topic propoertion for this query and add to that topic's sum accordingly
+			InstanceList testing = new InstanceList(d.ldaModel.instances.getPipe());
+			testing.addThruPipe(new Instance(qj.termString, null, "test instance", null));
+			TopicInferencer inferencer = d.ldaModel.model.getInferencer();
+			double[] testProb1 = inferencer.getSampledDistribution(testing.get(0), d.numTopics, 1, 5);
+			qj.setTopicProportions(testProb1);
+			int topic = getMaxLDATopic(qj);
+			sum[topic] += qj.disagreement;
+			// now we have the right sums for each topic for this particular subset S in consideration
+			// we can now proceed ro calculate the R score
+			for(int i=0;i<10;i++)
+			{
+				R += Math.sqrt(sum[i]);
+			}
+			qj.RScore = R;
+			System.out.println("RSCORE ========================== "+R);
+		}
+	}
 	
+	int getMaxLDATopic(Query q)
+	{
+		int topic = 0;
+		double max = -100000;
+		for(int i=0;i<10;i++)
+		{
+			if(q.topicProportions[i] > max) {topic = i;max=q.topicProportions[i];}
+		}
+		return topic;
+	}
 
 	public void calculateL()
 	{
@@ -41,12 +89,12 @@ public class SubmodularAL {
 				sim = getQueryPairLDASimilarity(q1, q2);
 				q1.wWithOthers+=sim;
 			}
-			System.out.println("wWithOthers: "+q1.wWithOthers);
+			//System.out.println("wWithOthers: "+q1.wWithOthers);
 		}
 		
 		
 		// now we iterate through the candidate list to form potential subsets S
-		double L=0;
+		
 		// find common cS part for each query in V
 		itr1 = d.V.iterator();
 		while(itr1.hasNext())
@@ -59,13 +107,13 @@ public class SubmodularAL {
 				Query qj = itr2.next();
 				qi.wWithBase += getQueryPairLDASimilarity(qi, qj);
 			}
-			System.out.println("wWithBase: "+qi.wWithOthers);
+			//System.out.println("wWithBase: "+qi.wWithOthers);
 		}
 		
 		Iterator<Query> itrS = d.candidates.iterator();
 		while(itrS.hasNext())
 		{
-			L = 0;
+			double L = 0;
 			Query qS = itrS.next();
 			double cS = 0, cV=0;
 			itr1 = d.V.iterator();
@@ -75,7 +123,7 @@ public class SubmodularAL {
 				cS = qi.wWithBase + getQueryPairLDASimilarity(qi, qS);
 				cV = qi.wWithOthers;
 				L += Math.min(cS, alpha*cV);
-				System.out.println("cS: "+cS+" cV: "+cV);
+				//System.out.println("cS: "+cS+" cV: "+cV);
 			}
 			// now for this set (base+qS) we have the L score
 			qS.LScore = L;
@@ -102,9 +150,26 @@ public class SubmodularAL {
 		//System.exit(0);
 	}
 
-	public void populateQueryTopicProportions()
+	public void populateQueryTopicProportionsForV()
 	{
 		Iterator<Query> itr = d.V.iterator();
+		int c = 0;
+		while(itr.hasNext())
+		{
+			Query q = itr.next();
+			InstanceList testing = new InstanceList(d.ldaModel.instances.getPipe());
+			testing.addThruPipe(new Instance(q.termString, null, "test instance", null));
+			TopicInferencer inferencer = d.ldaModel.model.getInferencer();
+			double[] testProb1 = inferencer.getSampledDistribution(testing.get(0), d.numTopics, 1, 5);	
+			q.setTopicProportions(testProb1);
+			//System.out.println(testProb1[0]+"_"+testProb1[1]+"_"+testProb1[2]+"_"+testProb1[3]+"_");
+			c++;
+		}
+		System.out.println("Topic Proportions populated for "+c+" quries.");
+	}
+	public void populateQueryTopicProportionsForBase()
+	{
+		Iterator<Query> itr = d.base.iterator();
 		int c = 0;
 		while(itr.hasNext())
 		{
@@ -138,10 +203,5 @@ public class SubmodularAL {
 		sim = num/den;
 		if(sim>10000) {System.out.println("inside getQueryPairLDASimilarity in Submodular class, NaN similarity case happened");System.exit(0);}
 		return sim;
-	}
-
-	public void populateR()
-	{
-
 	}
 }
