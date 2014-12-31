@@ -7,7 +7,7 @@ import cc.mallet.types.InstanceList;
 public class SubmodularAL {
 
 	public QDataset d;
-	public double alpha = 0.8;
+	public double alpha = 1;
 
 	public SubmodularAL(QDataset d)
 	{
@@ -47,12 +47,15 @@ public class SubmodularAL {
 			double[] testProb1 = inferencer.getSampledDistribution(testing.get(0), d.numTopics, 1, 5);
 			qj.setTopicProportions(testProb1);
 			int topic = getMaxLDATopic(qj);
-			sum[topic] += qj.disagreement;
+			//sum[topic] += qj.disagreement;
 			// now we have the right sums for each topic for this particular subset S in consideration
 			// we can now proceed ro calculate the R score
 			for(int i=0;i<10;i++)
 			{
-				R += Math.sqrt(sum[i]);
+				if(i == topic)
+					R += Math.sqrt(sum[i]+qj.disagreement);
+				else
+					R += Math.sqrt(sum[i]);
 			}
 			qj.RScore = R;
 			System.out.println("RSCORE ========================== "+R);
@@ -127,7 +130,7 @@ public class SubmodularAL {
 			}
 			// now for this set (base+qS) we have the L score
 			qS.LScore = L;
-			System.out.println("LSCORE ========================== "+L);
+			//System.out.println("LSCORE ========================== "+L);
 		}
 	}
 

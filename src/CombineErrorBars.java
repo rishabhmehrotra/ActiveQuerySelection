@@ -7,7 +7,7 @@ public class CombineErrorBars {
 		//System.exit(0);
 		
 		//String algo = "topic_top10_PL";
-		String algo = "LScore";
+		String algo = "LScore10_";
 		/*
 		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_B10_"+algo+"11.txt"));
 		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_B10_"+algo+"21.txt"));

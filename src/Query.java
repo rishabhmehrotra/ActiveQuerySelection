@@ -16,7 +16,10 @@ public class Query {
 	public float topiclistSimilarity;
 	public double wWithOthers, wWithBase;//for the submodular part L
 	public double LScore, RScore, FScore;
+	public double nLScore, nRScore; // normalized scores based on the max & min values
 	
+	
+
 	public HashMap<String, Float> termMap;
 	public String termString;
 
@@ -151,5 +154,21 @@ public class Query {
 		for(int i=0;i<10;i++)
 			this.topicProportions[i] = topicProportions[i];
 		//this.topicProportions = topicProportions;
+	}
+	
+	public double getnLScore() {
+		return nLScore;
+	}
+
+	public void setnLScore(double nLScore) {
+		this.nLScore = nLScore;
+	}
+
+	public double getnRScore() {
+		return nRScore;
+	}
+
+	public void setnRScore(double nRScore) {
+		this.nRScore = nRScore;
 	}
 }

@@ -4,7 +4,7 @@ import org.apache.commons.io.FileUtils;
 
 public class SuperDriver {
 
-	public static String suffix = "LScore8";
+	public static String suffix = "LScore10";
 	
 	public static void main(String[] args) throws Exception {
 		int nFolds = 5;

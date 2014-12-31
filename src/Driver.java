@@ -129,6 +129,7 @@ public class Driver {
 				// we need to normalize the disagreement to make it a value between 0 & 1
 				double maxDisagreement = 0, minDisagreement = 100000;
 				float maxSim=0, minSim=1000, maxLDASim=0, minLDASim=1000;
+				double minLScore = 1000000, minRScore = 10000000, maxRScore = -100000, maxLScore = -100000;
 				double max_avgPL = -1000, min_avgPL = 1000;
 				Iterator<Query> it = d.candidates.iterator();
 				while(it.hasNext())
@@ -140,6 +141,12 @@ public class Driver {
 					if(q.currentAvgSimilarity > maxSim) maxSim = q.currentAvgSimilarity;
 					if(q.similarityLDA > maxLDASim) maxLDASim = q.similarityLDA;
 					if(q.similarityLDA < minLDASim) minLDASim = q.similarityLDA;
+					if(q.LScore > maxLScore) maxLScore = q.LScore;
+					if(q.LScore < minLScore) minLScore = q.LScore;
+					if(q.RScore > maxRScore) maxRScore = q.RScore;
+					if(q.RScore < minRScore) minRScore = q.RScore;
+					
+					
 					if(q.disagreement == 0) System.out.println("0 disagreement: "+q.qID);
 					if(q.similarityLDA == 0) System.out.println("0 LDASim: "+q.qID);
 					
@@ -154,8 +161,8 @@ public class Driver {
 					
 					q.avgPL = avgPL;
 				}
-				System.out.println("Max disagreement: "+maxDisagreement+" min disagreement: "+minDisagreement);
-				System.out.println("Max LDASim: "+maxLDASim+" minLDASim: "+minLDASim);
+				//System.out.println("Max disagreement: "+maxDisagreement+" min disagreement: "+minDisagreement);
+				//System.out.println("Max LDASim: "+maxLDASim+" minLDASim: "+minLDASim);
 				//System.exit(0);
 				it = d.candidates.iterator();
 				while(it.hasNext())
@@ -170,15 +177,26 @@ public class Driver {
 					q.setNormalizedLDASimilarity(normalizedLDASim);
 					double normalizedAvgPL = (q.avgPL - min_avgPL)/(max_avgPL - min_avgPL);
 					q.setNormalizedAvgPL(normalizedAvgPL);
+					double normalizedLScore =(q.LScore-minLScore)/(maxLScore - minLScore);
+					q.setnLScore(normalizedLScore);
+					double normalizedRScore =(q.RScore-minRScore)/(maxRScore - minRScore);
+					q.setnRScore(normalizedRScore);
+					System.out.println(q.LScore+"_"+q.nLScore+"_"+q.RScore+"_"+q.nRScore);
+					/*q.nLScore = normalizedLScore;
+					q.nRScore = normalizedRScore;*/
 					//System.out.println("------------------------------------------------------normalizedAvgPL: "+normalizedAvgPL);
 				}
+				System.exit(0);
 		
 				
 				Query next = null, nextBySim = null, nextByLDASim=null, nextByCombined = null, nextByCombined2 = null, nextByCombined3 = null, nextByPL = null, nextByELO = null, nextByLScore = null, nextByRScore = null;
-				double max=0, maxSimilarity=0, maxLDASimilarity=0, maxCombined=0, maxCombined2=0, maxCombined3=0, minPL = 1000, maxEL = -1000, maxLScore = -1000, maxRScore = -1000;
+				double max=0, maxSimilarity=0, maxLDASimilarity=0, maxCombined=0, maxCombined2=0, maxCombined3=0, minPL = 1000, maxEL = -1000;
+				maxLScore = -90000;
+				maxRScore = -90000;
 
 				Iterator<Query> itr = d.candidates.iterator();
 				//for(j=0;j<d.nCandidateQ;j++)
+				int tt=0;
 				while(itr.hasNext())
 				{
 					Query q = itr.next();
@@ -207,7 +225,11 @@ public class Driver {
 					if(combine2 >= maxCombined2) {maxCombined2 = combine2;nextByCombined2 = q;}
 					if(combine3 > maxCombined3) {maxCombined3 = combine3;nextByCombined3 = q;}
 					//System.out.println("For query with qID= "+q.qID+" the disagreement is= "+q.disagreement);
+					//System.out.println(q.LScore+"_"+q.nLScore+"_"+q.RScore+"_"+q.nRScore);
+					//if(q.nLScore == 1) tt++;
 				}
+				//System.out.println(tt);
+				//System.exit(0);
 				// now we have the query which should be used next and we need to add it to the base list on which we should train henceforth
 				if(next == null) System.out.println("/n/nThe NEXT query selected is NULL, something went wrong, have a look!/n/n");
 				//d.base.add(next);
@@ -225,7 +247,19 @@ public class Driver {
 				System.out.println("By minAvgPL"+nextByPL.disagreement+ "__"+nextByPL.normalizedDisagreement+"__"+nextByPL.currentAvgSimilarity+" "+nextByPL.combine+" "+nextByPL.combine2+" "+nextByPL.combine3+" NormalizedLDASim:"+nextByPL.normalizedLDASimilarity+" Min PL:"+nextByPL.avgPL+" NormalizedAvgPL: "+nextByPL.normalizedAvgPL+" MaxELO:"+nextByPL.ELScore+" LScore:"+nextByPL.LScore+" RScore:"+nextByPL.RScore);
 				//System.out.println("By maxELO"+nextByELO.disagreement+ "__"+nextByELO.normalizedDisagreement+"__"+nextByELO.currentAvgSimilarity+" "+nextByELO.combine+" "+nextByELO.combine2+" "+nextByELO.combine3+" NormalizedLDASim:"+nextByELO.normalizedLDASimilarity+" Min PL:"+nextByELO.avgPL+" NormalizedAvgPL: "+nextByELO.normalizedAvgPL+" MaxELO:"+nextByELO.ELScore);
 				System.out.println("By LScore"+nextByLScore.disagreement+ "__"+nextByLScore.normalizedDisagreement+"__"+nextByLScore.currentAvgSimilarity+" "+nextByLScore.combine+" "+nextByLScore.combine2+" "+nextByLScore.combine3+" NormalizedLDASim:"+nextByLScore.normalizedLDASimilarity+" Min PL:"+nextByLScore.avgPL+" NormalizedAvgPL: "+nextByLScore.normalizedAvgPL+" MaxELO:"+nextByLScore.ELScore+" LScore:"+nextByLScore.LScore+" RScore:"+nextByLScore.RScore);
-				System.out.println("By RScore"+nextByRScore.disagreement+ "__"+nextByRScore.normalizedDisagreement+"__"+nextByRScore.currentAvgSimilarity+" "+nextByRScore.combine+" "+nextByRScore.combine2+" "+nextByRScore.combine3+" NormalizedLDASim:"+nextByRScore.normalizedLDASimilarity+" Min PL:"+nextByRScore.avgPL+" NormalizedAvgPL: "+nextByRScore.normalizedAvgPL+" MaxELO:"+nextByRScore.ELScore+" LScore:"+nextByRScore.LScore+" RScore:"+nextByRScore.RScore);
+				System.out.println("By RScore"+nextByRScore.disagreement
+						+ "__"+nextByRScore.normalizedDisagreement+"__"
+						+nextByRScore.currentAvgSimilarity+" "
+						+nextByRScore.combine+" "
+						+nextByRScore.combine2+" "
+						+nextByRScore.combine3
+						+" NormalizedLDASim:"
+						+nextByRScore.normalizedLDASimilarity+" Min PL:"
+						+nextByRScore.avgPL+" NormalizedAvgPL: "
+						+nextByRScore.normalizedAvgPL+" MaxELO:"
+						+nextByRScore.ELScore+" LScore:"
+						+nextByRScore.LScore+" RScore:"
+						+nextByRScore.RScore);
 				
 				
 				//System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Max similarity query being removed which has minAvgPL= "+nextBySim.avgPL);
@@ -258,11 +292,14 @@ public class Driver {
 				//removeQueryFromCandidateSet(nextByELO);
 				//removeQueryFromCandidateSet(nextByPL);
 				removeQueryFromCandidateSet(nextByLScore);
+				System.out.println("maxLScore:"+maxLScore+" minLScore:"+minLScore);
+				System.out.println("-------------------------------------------"+nextByLScore.nLScore+"_"+nextByLScore.nRScore);
 				
 				
 				//System.out.println("Size after query removal from candidate set: "+d.nCandidateQ);
 				//System.out.println("Size of the new base set: "+d.base.size());
 			} // end of while(batch>0)
+			//System.exit(0);
 			// now we have the new base set ready, we should extract the subset from it now and see how it performs
 			// also, we need code for converting scores to NDCG measure now...
 			new RunTestingAlgorithm(d.base, d);
