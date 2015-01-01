@@ -18,6 +18,19 @@ public class SubmodularAL {
 		// we now have each query's LDA topics
 		calculateL();
 		calculateR();
+		//calculateF(); // this should be done inside the Driver class once nLScore & nRScore have been populated
+	}
+	
+	public void calculateF()
+	{
+		Iterator<Query> itr = d.candidates.iterator();
+		while(itr.hasNext())
+		{
+			Query qj = itr.next();
+			qj.FScore = (0.4*qj.LScore)+(0.6*qj.RScore);
+			//System.out.println(qj.LScore+"\t"+qj.RScore+"\t"+qj.FScore);
+		}
+		System.exit(0);
 	}
 
 	public void calculateR()

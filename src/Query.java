@@ -16,6 +16,8 @@ public class Query {
 	public float topiclistSimilarity;
 	public double wWithOthers, wWithBase;//for the submodular part L
 	public double LScore, RScore, FScore;
+
+
 	public double nLScore, nRScore; // normalized scores based on the max & min values
 	
 	
@@ -170,5 +172,13 @@ public class Query {
 
 	public void setnRScore(double nRScore) {
 		this.nRScore = nRScore;
+	}
+	
+	public double getFScore() {
+		return FScore;
+	}
+
+	public void setFScore(double fScore) {
+		FScore = fScore;
 	}
 }

@@ -9,7 +9,7 @@ public class Driver {
 	
 	public static QDataset d;
 	
-	public Driver() throws IOException
+	public Driver(double wt1, double wt2) throws IOException
 	//public static void main(String args[]) throws IOException
 	{
 		System.out.println("Hello! World.");
@@ -53,7 +53,7 @@ public class Driver {
 		//System.exit(0);
 		
 		
-		int N = 40;
+		int N = 30;
 		
 		int i,j,k,l,m;
 		int sizeDl = d.base.size();
@@ -181,16 +181,19 @@ public class Driver {
 					q.setnLScore(normalizedLScore);
 					double normalizedRScore =(q.RScore-minRScore)/(maxRScore - minRScore);
 					q.setnRScore(normalizedRScore);
-					System.out.println(q.LScore+"_"+q.nLScore+"_"+q.RScore+"_"+q.nRScore);
+					
+					double FScore = (wt1*q.nLScore)+(wt2*q.nRScore); 
+					q.setFScore(FScore);
+					System.out.println(q.LScore+"\t"+q.RScore+"\t"+q.FScore+"_"+wt1+"_"+wt2);
 					/*q.nLScore = normalizedLScore;
 					q.nRScore = normalizedRScore;*/
 					//System.out.println("------------------------------------------------------normalizedAvgPL: "+normalizedAvgPL);
 				}
-				System.exit(0);
+				//System.exit(0);
 		
 				
-				Query next = null, nextBySim = null, nextByLDASim=null, nextByCombined = null, nextByCombined2 = null, nextByCombined3 = null, nextByPL = null, nextByELO = null, nextByLScore = null, nextByRScore = null;
-				double max=0, maxSimilarity=0, maxLDASimilarity=0, maxCombined=0, maxCombined2=0, maxCombined3=0, minPL = 1000, maxEL = -1000;
+				Query next = null, nextBySim = null, nextByLDASim=null, nextByCombined = null, nextByCombined2 = null, nextByCombined3 = null, nextByPL = null, nextByELO = null, nextByLScore = null, nextByRScore = null, nextByFScore = null;
+				double max=0, maxSimilarity=0, maxLDASimilarity=0, maxCombined=0, maxCombined2=0, maxCombined3=0, minPL = 1000, maxEL = -1000, maxFScore = -1000;
 				maxLScore = -90000;
 				maxRScore = -90000;
 
@@ -209,6 +212,7 @@ public class Driver {
 					if(q.ELScore > maxEL) {maxEL = q.ELScore;nextByELO = q;}
 					if(q.LScore > maxLScore) {maxLScore = q.LScore;nextByLScore = q;}
 					if(q.RScore > maxRScore) {maxRScore = q.RScore;nextByRScore = q;}
+					if(q.FScore > maxFScore) {maxFScore = q.FScore;nextByFScore = q;}
 					//System.out.println(q.PL1+" "+q.PL2+" "+q.PL3+" "+q.PL4);
 					
 					// the query which has the least maximum PL among the 4 rankers will be selected
@@ -238,28 +242,17 @@ public class Driver {
 				//if(nextByCombined2 == null) {removeQueryFromCandidateSet(nextByCombined2);batch++; continue;}
 				
 				
-				System.out.println("------\nComparing Disagreement & Similarity:\nBy Disagreement "+next.disagreement+ "__"+next.normalizedDisagreement+ "__"+ next.currentAvgSimilarity+" "+next.combine+" "+next.combine2+" "+next.combine3+" NormalizedLDASim:"+next.normalizedLDASimilarity+" Min PL:"+next.avgPL+" NormalizedAvgPL: "+next.normalizedAvgPL+" MaxELO:"+next.ELScore+" LScore:"+next.LScore+" RScore:"+next.RScore);
+				if(next!=null) System.out.println("------\nComparing Disagreement & Similarity:\nBy Disagreement "+next.disagreement+ "__"+next.normalizedDisagreement+ "__"+ next.currentAvgSimilarity+" "+next.combine+" "+next.combine2+" "+next.combine3+" NormalizedLDASim:"+next.normalizedLDASimilarity+" Min PL:"+next.avgPL+" NormalizedAvgPL: "+next.normalizedAvgPL+" MaxELO:"+next.ELScore+" LScore:"+next.LScore+" RScore:"+next.RScore+" FScore:"+next.FScore);
 				//System.out.println("By Similarity: "+nextBySim.disagreement+ "__"+nextBySim.normalizedDisagreement+"__"+nextBySim.currentAvgSimilarity+" "+nextBySim.combine +" "+nextBySim.combine2+" "+nextBySim.combine3+" NormalizedLDASim:"+nextBySim.normalizedLDASimilarity+" Min PL:"+nextBySim.avgPL);
 				//System.out.println("By LDANSimilarity: "+nextByLDASim.disagreement+ "__"+nextByLDASim.normalizedDisagreement+"__"+nextByLDASim.currentAvgSimilarity+" "+nextByLDASim.combine +" "+nextByLDASim.combine2+" "+nextByLDASim.combine3+" NormalizedLDASim:"+nextByLDASim.normalizedLDASimilarity+" Min PL:"+nextByLDASim.avgPL+" MinNormalizedAvgPL: "+nextByPL.normalizedAvgPL+" MaxELO:"+nextByELO.ELScore);
 				//System.out.println("By Combine"+nextByCombined.disagreement+ "__"+nextByCombined.normalizedDisagreement+"__"+nextByCombined.currentAvgSimilarity+" "+nextByCombined.combine+" "+nextByCombined.combine2+" "+nextByCombined.combine3+" NormalizedLDASim:"+nextByCombined.normalizedLDASimilarity+" Min PL:"+nextByCombined.avgPL+" MinNormalizedAvgPL: "+nextByPL.normalizedAvgPL+" MaxELO:"+nextByELO.ELScore);
 				//System.out.println("By Combine2"+nextByCombined2.disagreement+ "__"+nextByCombined2.normalizedDisagreement+"__"+nextByCombined2.currentAvgSimilarity+" "+nextByCombined2.combine+" "+nextByCombined2.combine2+" "+nextByCombined2.combine3+" NormalizedLDASim:"+nextByCombined2.normalizedLDASimilarity+" Min PL:"+nextByCombined2.avgPL+" MinNormalizedAvgPL: "+nextByPL.normalizedAvgPL+" MaxELO:"+nextByELO.ELScore);
 				//System.out.println("By Combine3"+nextByCombined3.disagreement+ "__"+nextByCombined3.normalizedDisagreement+"__"+nextByCombined3.currentAvgSimilarity+" "+nextByCombined3.combine+" "+nextByCombined3.combine2+" "+nextByCombined3.combine3+" NormalizedLDASim:"+nextByCombined3.normalizedLDASimilarity+" Min PL:"+nextByCombined3.avgPL+" MinNormalizedAvgPL: "+nextByPL.normalizedAvgPL+" MaxELO:"+nextByELO.ELScore);
-				System.out.println("By minAvgPL"+nextByPL.disagreement+ "__"+nextByPL.normalizedDisagreement+"__"+nextByPL.currentAvgSimilarity+" "+nextByPL.combine+" "+nextByPL.combine2+" "+nextByPL.combine3+" NormalizedLDASim:"+nextByPL.normalizedLDASimilarity+" Min PL:"+nextByPL.avgPL+" NormalizedAvgPL: "+nextByPL.normalizedAvgPL+" MaxELO:"+nextByPL.ELScore+" LScore:"+nextByPL.LScore+" RScore:"+nextByPL.RScore);
+				if(nextByPL!=null) System.out.println("By minAvgPL"+nextByPL.disagreement+ "__"+nextByPL.normalizedDisagreement+"__"+nextByPL.currentAvgSimilarity+" "+nextByPL.combine+" "+nextByPL.combine2+" "+nextByPL.combine3+" NormalizedLDASim:"+nextByPL.normalizedLDASimilarity+" Min PL:"+nextByPL.avgPL+" NormalizedAvgPL: "+nextByPL.normalizedAvgPL+" MaxELO:"+nextByPL.ELScore+" LScore:"+nextByPL.LScore+" RScore:"+nextByPL.RScore+" FScore:"+nextByPL.FScore);
 				//System.out.println("By maxELO"+nextByELO.disagreement+ "__"+nextByELO.normalizedDisagreement+"__"+nextByELO.currentAvgSimilarity+" "+nextByELO.combine+" "+nextByELO.combine2+" "+nextByELO.combine3+" NormalizedLDASim:"+nextByELO.normalizedLDASimilarity+" Min PL:"+nextByELO.avgPL+" NormalizedAvgPL: "+nextByELO.normalizedAvgPL+" MaxELO:"+nextByELO.ELScore);
-				System.out.println("By LScore"+nextByLScore.disagreement+ "__"+nextByLScore.normalizedDisagreement+"__"+nextByLScore.currentAvgSimilarity+" "+nextByLScore.combine+" "+nextByLScore.combine2+" "+nextByLScore.combine3+" NormalizedLDASim:"+nextByLScore.normalizedLDASimilarity+" Min PL:"+nextByLScore.avgPL+" NormalizedAvgPL: "+nextByLScore.normalizedAvgPL+" MaxELO:"+nextByLScore.ELScore+" LScore:"+nextByLScore.LScore+" RScore:"+nextByLScore.RScore);
-				System.out.println("By RScore"+nextByRScore.disagreement
-						+ "__"+nextByRScore.normalizedDisagreement+"__"
-						+nextByRScore.currentAvgSimilarity+" "
-						+nextByRScore.combine+" "
-						+nextByRScore.combine2+" "
-						+nextByRScore.combine3
-						+" NormalizedLDASim:"
-						+nextByRScore.normalizedLDASimilarity+" Min PL:"
-						+nextByRScore.avgPL+" NormalizedAvgPL: "
-						+nextByRScore.normalizedAvgPL+" MaxELO:"
-						+nextByRScore.ELScore+" LScore:"
-						+nextByRScore.LScore+" RScore:"
-						+nextByRScore.RScore);
+				System.out.println("By LScore"+nextByLScore.disagreement+ "__"+nextByLScore.normalizedDisagreement+"__"+nextByLScore.currentAvgSimilarity+" "+nextByLScore.combine+" "+nextByLScore.combine2+" "+nextByLScore.combine3+" NormalizedLDASim:"+nextByLScore.normalizedLDASimilarity+" Min PL:"+nextByLScore.avgPL+" NormalizedAvgPL: "+nextByLScore.normalizedAvgPL+" MaxELO:"+nextByLScore.ELScore+" LScore:"+nextByLScore.LScore+" RScore:"+nextByLScore.RScore+" FScore:"+nextByLScore.FScore);
+				System.out.println("By RScore"+nextByRScore.disagreement+ "__"+nextByRScore.normalizedDisagreement+"__"+nextByRScore.currentAvgSimilarity+" "+nextByRScore.combine+" "+nextByRScore.combine2+" "+nextByRScore.combine3+" NormalizedLDASim:"+nextByRScore.normalizedLDASimilarity+" Min PL:"+nextByRScore.avgPL+" NormalizedAvgPL: "+nextByRScore.normalizedAvgPL+" MaxELO:"+nextByRScore.ELScore+" LScore:"+nextByRScore.LScore+" RScore:"+nextByRScore.RScore+" FScore:"+nextByRScore.FScore);
+				System.out.println("By FScore"+nextByFScore.disagreement+ "__"+nextByFScore.normalizedDisagreement+"__"+nextByFScore.currentAvgSimilarity+" "+nextByFScore.combine+" "+nextByFScore.combine2+" "+nextByFScore.combine3+" NormalizedLDASim:"+nextByFScore.normalizedLDASimilarity+" Min PL:"+nextByFScore.avgPL+" NormalizedAvgPL: "+nextByFScore.normalizedAvgPL+" MaxELO:"+nextByFScore.ELScore+" LScore:"+nextByFScore.LScore+" RScore:"+nextByFScore.RScore+" FScore:"+nextByFScore.FScore);
 				
 				
 				//System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^Max similarity query being removed which has minAvgPL= "+nextBySim.avgPL);
@@ -287,13 +280,13 @@ public class Driver {
 				}*/
 				//d.base.add(nextByELO);
 				//d.base.add(nextByPL);
-				d.base.add(nextByLScore);
+				d.base.add(nextByRScore);
 				d.nBase++;
 				//removeQueryFromCandidateSet(nextByELO);
 				//removeQueryFromCandidateSet(nextByPL);
-				removeQueryFromCandidateSet(nextByLScore);
-				System.out.println("maxLScore:"+maxLScore+" minLScore:"+minLScore);
-				System.out.println("-------------------------------------------"+nextByLScore.nLScore+"_"+nextByLScore.nRScore);
+				removeQueryFromCandidateSet(nextByRScore);
+				//System.out.println("maxLScore:"+maxLScore+" minLScore:"+minLScore);
+				//System.out.println("-------------------------------------------"+nextByLScore.nLScore+"_"+nextByLScore.nRScore);
 				
 				
 				//System.out.println("Size after query removal from candidate set: "+d.nCandidateQ);
