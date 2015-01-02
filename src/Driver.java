@@ -53,7 +53,7 @@ public class Driver {
 		//System.exit(0);
 		
 		
-		int N = 30;
+		int N = 50;
 		
 		int i,j,k,l,m;
 		int sizeDl = d.base.size();
@@ -280,11 +280,13 @@ public class Driver {
 				}*/
 				//d.base.add(nextByELO);
 				//d.base.add(nextByPL);
-				d.base.add(nextByRScore);
+				//d.base.add(nextByRScore);
+				d.base.add(nextByLDASim);
 				d.nBase++;
 				//removeQueryFromCandidateSet(nextByELO);
 				//removeQueryFromCandidateSet(nextByPL);
-				removeQueryFromCandidateSet(nextByRScore);
+				//removeQueryFromCandidateSet(nextByRScore);
+				removeQueryFromCandidateSet(nextByLDASim);
 				//System.out.println("maxLScore:"+maxLScore+" minLScore:"+minLScore);
 				//System.out.println("-------------------------------------------"+nextByLScore.nLScore+"_"+nextByLScore.nRScore);
 				

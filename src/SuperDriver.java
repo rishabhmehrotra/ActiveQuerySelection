@@ -5,6 +5,7 @@ import org.apache.commons.io.FileUtils;
 public class SuperDriver {
 
 	public static String suffix = "FScoreWithNormalizedLR";
+	//public static String suffix = "LDA_AGAIN";
 
 	public static int nFolds = 5;
 	public static double wt1=0.1, wt2=0.9;
@@ -53,10 +54,18 @@ public class SuperDriver {
 		String sFile3 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/resultsAT10.txt";
 
 		int t1 = (int)wt1*10, t2=(int)wt2*10;
-		String dFile1 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2008MQ/Fold"+j+"/NDCG_errorBars_"+suffix+f1+"-"+f2+"_"+j+".txt";
-		String dFile2 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2008MQ/Fold"+j+"/AP_errorBars_"+suffix+f1+"-"+f2+"_"+j+".txt";
-		String dFile3 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2008MQ/Fold"+j+"/resultsAT10_"+suffix+f1+"-"+f2+"_"+j+".txt";
-
+		/*String dFile1 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2008MQ/Fold"+j+"/NDCG_errorBars_"+suffix+f1+"-"+f2+"_"+j+"1.txt";
+		String dFile2 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2008MQ/Fold"+j+"/AP_errorBars_"+suffix+f1+"-"+f2+"_"+j+"1.txt";
+		String dFile3 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2008MQ/Fold"+j+"/resultsAT10_"+suffix+f1+"-"+f2+"_"+j+"1.txt";
+		*/
+		/*
+		String dFile1 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2008MQ/Fold"+j+"/NDCG_errorBars_"+suffix+j+"1.txt";
+		String dFile2 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2008MQ/Fold"+j+"/AP_errorBars_"+suffix+j+"1.txt";
+		String dFile3 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2008MQ/Fold"+j+"/resultsAT10_"+suffix+j+"1.txt";
+		*/
+		String dFile1 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2007MQ/Fold"+j+"/NDCG_errorBars_"+suffix+f1+"-"+f2+"_"+j+"1.txt";
+		String dFile2 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2007MQ/Fold"+j+"/AP_errorBars_"+suffix+f1+"-"+f2+"_"+j+"1.txt";
+		String dFile3 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/forEval/results/2007MQ/Fold"+j+"/resultsAT10_"+suffix+f1+"-"+f2+"_"+j+"1.txt";
 		File source, dest;
 		source = new File(sFile1);
 		dest = new File(dFile1);
@@ -73,9 +82,9 @@ public class SuperDriver {
 	}
 
 	private static void moveFilesBeforeStartOfFold(int j) throws IOException{
-		String sFile1 = "/Users/rishabhmehrotra/dev/UCL/ActiveQuerySelection/LETOR_Dataset/MQ2008/Fold"+j+"/train.txt";
-		String sFile2 = "/Users/rishabhmehrotra/dev/UCL/ActiveQuerySelection/LETOR_Dataset/MQ2008/Fold"+j+"/test.txt";
-		String sFile3 = "/Users/rishabhmehrotra/dev/UCL/ActiveQuerySelection/LETOR_Dataset/MQ2008/Fold"+j+"/valid.txt";
+		String sFile1 = "/Users/rishabhmehrotra/dev/UCL/ActiveQuerySelection/LETOR_Dataset/MQ2007/Fold"+j+"/train.txt";
+		String sFile2 = "/Users/rishabhmehrotra/dev/UCL/ActiveQuerySelection/LETOR_Dataset/MQ2007/Fold"+j+"/test.txt";
+		String sFile3 = "/Users/rishabhmehrotra/dev/UCL/ActiveQuerySelection/LETOR_Dataset/MQ2007/Fold"+j+"/valid.txt";
 
 		String dFile11 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/train.txt";
 		String dFile21 = "/Users/rishabhmehrotra/dev/workspace/ActiveQuerySelection/src/data/LETOR/test.txt";
