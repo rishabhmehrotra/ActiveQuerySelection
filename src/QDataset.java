@@ -29,8 +29,8 @@ public class QDataset {
 	public ArrayList<Query> V;// the set of all queries, for submodular part: base+candidate list
 	
 	public int batchSize = 10;
-	public int limit = 1010;
-	//public int limit = 400;
+	//public int limit = 1010;
+	public int limit = 400;
 
 	//public Query[] listOfCandidateQueries;
 	public int nCandidateQ;

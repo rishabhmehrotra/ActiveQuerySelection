@@ -64,7 +64,8 @@ public class WorkWithResults {
 			}
 			
 			// now do the rest
-			
+			System.setProperty("java.util.Arrays.useLegacyMergeSort", "true");
+
 			Collections.sort(q.listOfDocuments, new Comparator<Document>()  // REVERSE sort the arrayList, so that den of p is easy
 					{
 
