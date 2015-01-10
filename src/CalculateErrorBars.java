@@ -18,8 +18,8 @@ public class CalculateErrorBars {
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Fold4/NDCG_errorBars_PL41.txt"));
 		
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_FScoreWithNormalizedLR5-5_"));
-		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_LDA_AGAIN"));
-		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/COMBINED_topic_top10_PL"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_LDA_AGAIN"));
+		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/COMBINED_FScoreWithNormalizedLR5-5_"));
 		String line = br.readLine();
 		//line = line+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1);
 		//System.out.println(line);
