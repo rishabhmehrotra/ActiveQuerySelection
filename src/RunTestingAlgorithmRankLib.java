@@ -60,9 +60,9 @@ public class RunTestingAlgorithmRankLib {
 		deleteBinFiles();
 		
 		try {
-			String args1[]={"-train", "src/data/LETOR/forEval/forEval_train.txt", "-test", "src/data/LETOR/forEval/test.txt", "-validate", "src/data/LETOR/forEval/valid.txt", "-ranker", "2", "-metric2t", "NDCG@10", "-metric2T", "NDCG@10", "-save", "src/data/LETOR/forEval/forEval_mymodel.txt"};
+			String args1[]={"-silent","-train", "src/data/LETOR/forEval/forEval_train.txt", "-test", "src/data/LETOR/forEval/test.txt", "-validate", "src/data/LETOR/forEval/valid.txt", "-ranker", "3", "-metric2t", "NDCG@10", "-metric2T", "NDCG@10", "-save", "src/data/LETOR/forEval/forEval_mymodel.txt"};
 			runAlgo(args1);
-			String args2[]={"-load", "src/data/LETOR/forEval/forEval_mymodel.txt", "-rank", "src/data/LETOR/forEval/test.txt", "-score", "src/data/LETOR/forEval/forEval_predictions.txt"};
+			String args2[]={"-silent","-load", "src/data/LETOR/forEval/forEval_mymodel.txt", "-rank", "src/data/LETOR/forEval/test.txt", "-score", "src/data/LETOR/forEval/forEval_predictions.txt"};
 			runAlgo(args2);
 		} catch (Exception e) {e.printStackTrace();}
 		System.out.println("Running of the testing algorithm complete now...Computing NDGC now...");

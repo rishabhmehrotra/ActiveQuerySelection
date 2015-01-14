@@ -53,13 +53,13 @@ public class Driver {
 		//System.exit(0);
 		
 		
-		//int N = 50;
-		int N = 39;
+		int N = 50;
+		//int N = 37;
 		
 		int i,j,k,l,m;
 		int sizeDl = d.base.size();
 		int sizeSubset = (int) (0.5*sizeDl);
-		int temp =1;
+		int temp =1; // maybe temp governs if the part before while(batch>0) runs or not -- so temp!=1 when we run just RANDOM baseline
 		for(i=1;i<=N;i++)
 		{
 			//deleteBinFiles();
@@ -128,6 +128,7 @@ public class Driver {
 			*/
 			
 			//batch = 0;//if running experiments with topic based sampling, we just use the top10 Query list returned by the function and add them directly to the base set 
+			//batch = 0;
 			while(batch>0)
 			{
 				batch--;
@@ -283,15 +284,15 @@ public class Driver {
 					d.nBase++;
 					removeQueryFromCandidateSet(next);
 				}*/
-				//d.base.add(nextByELO);
-				//d.base.add(nextByPL);
-				//d.base.add(nextByRScore);
-				d.base.add(nextByLDASim);
+				d.base.add(nextByPL);
+				//d.base.add(next);
+				//d.base.add(nextByFScore);
+				//d.base.add(nextByLDASim);
 				d.nBase++;
-				//removeQueryFromCandidateSet(nextByELO);
-				//removeQueryFromCandidateSet(nextByPL);
-				//removeQueryFromCandidateSet(nextByRScore);
-				removeQueryFromCandidateSet(nextByLDASim);
+				removeQueryFromCandidateSet(nextByPL);
+				//removeQueryFromCandidateSet(next);
+				//removeQueryFromCandidateSet(nextByFScore);
+				//removeQueryFromCandidateSet(nextByLDASim);
 				//System.out.println("maxLScore:"+maxLScore+" minLScore:"+minLScore);
 				//System.out.println("-------------------------------------------"+nextByLScore.nLScore+"_"+nextByLScore.nRScore);
 				
@@ -307,13 +308,14 @@ public class Driver {
 			new RunTestingAlgorithmRankLib(d.base, d);
 			
 			// uncomment this part if yoi have to run the random part as well
-			/*double avg = 0, avgAP=0;
-			for(int ii=0;ii<1;ii++)
+			double avg = 0, avgAP=0;
+			for(int ii=0;ii<20;ii++)
 			{
 				File dir = new File("src/data/LETOR/forEval/randomQ/");
 				for(File files: dir.listFiles()) files.delete();
 				populateRandomQueries();
-				new RunRandomTestingAlgorithm(d.randomQ, d);
+				//new RunRandomTestingAlgorithm(d.randomQ, d);
+				new RunRandomTestingAlgorithmRankLib(d.randomQ, d);
 				avg += d.resultRandom;
 				avgAP += d.resultRandomAP;
 			}
@@ -324,7 +326,7 @@ public class Driver {
 			out.write("Average NDCG for this run: "+avg+"\n");
 			out.write("Average AP for this run: "+avgAP+"\n");
 			out.close();
-			*/
+			
 		}
 		
 		

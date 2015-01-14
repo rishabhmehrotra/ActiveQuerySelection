@@ -1,59 +1,322 @@
-import java.io.*;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.io.*;
 
-import ciir.umass.edu.features.FeatureManager;
 import ciir.umass.edu.features.Normalizer;
 import ciir.umass.edu.features.SumNormalizor;
 import ciir.umass.edu.features.ZScoreNormalizor;
-import ciir.umass.edu.learning.*;
-import ciir.umass.edu.learning.boosting.*;
-import ciir.umass.edu.learning.neuralnet.*;
-import ciir.umass.edu.learning.tree.LambdaMART;
-import ciir.umass.edu.learning.tree.RFRanker;
+import ciir.umass.edu.learning.CoorAscent;
 import ciir.umass.edu.learning.Evaluator;
 import ciir.umass.edu.learning.RANKER_TYPE;
-import ciir.umass.edu.learning.RankList;
 import ciir.umass.edu.learning.Ranker;
+import ciir.umass.edu.learning.RankerFactory;
+import ciir.umass.edu.learning.boosting.AdaRank;
+import ciir.umass.edu.learning.boosting.RankBoost;
+import ciir.umass.edu.learning.neuralnet.ListNet;
+import ciir.umass.edu.learning.neuralnet.Neuron;
+import ciir.umass.edu.learning.neuralnet.RankNet;
+import ciir.umass.edu.learning.tree.LambdaMART;
+import ciir.umass.edu.learning.tree.RFRanker;
 import ciir.umass.edu.metric.ERRScorer;
-import ciir.umass.edu.metric.METRIC;
-import ciir.umass.edu.metric.MetricScorer;
-import ciir.umass.edu.metric.MetricScorerFactory;
-import ciir.umass.edu.utilities.FileUtils;
-import ciir.umass.edu.utilities.LinearComputer;
-import ciir.umass.edu.utilities.MergeSorter;
 import ciir.umass.edu.utilities.MyThreadPool;
 import ciir.umass.edu.utilities.SimpleMath;
-import ciir.umass.edu.utilities.Sorter;
-
-
-public class RunLearningAlgorithmRankLib {
+import joptsimple.OptionParser;
+import joptsimple.OptionSet;
+import edu.uci.jforests.config.TrainingConfig;
+import edu.uci.jforests.dataset.Dataset;
+import edu.uci.jforests.dataset.DatasetLoader;
+import edu.uci.jforests.dataset.RankingDataset;
+import edu.uci.jforests.dataset.RankingDatasetLoader;
+import edu.uci.jforests.input.RankingRaw2BinConvertor;
+import edu.uci.jforests.input.Raw2BinConvertor;
+import edu.uci.jforests.learning.LearningUtils;
+import edu.uci.jforests.learning.trees.Ensemble;
+import edu.uci.jforests.learning.trees.decision.DecisionTree;
+import edu.uci.jforests.learning.trees.regression.RegressionTree;
+import edu.uci.jforests.sample.RankingSample;
+import edu.uci.jforests.sample.Sample;
+import edu.uci.jforests.util.IOUtils;
+import edu.uci.jforests.applications.*;
+public class RunRandomTestingAlgorithmRankLib {
 	
-	ArrayList<Query> subset;
+	ArrayList<Query> random;
+	ArrayList<Query> listTestQueries;
+	Runner r;
 	String[] args;
+	public String testFile = "src/data/LETOR/forEval/test.txt";
+	public String predictionFile = "src/data/LETOR/forEval/randomQ/forEval_random_predictions.txt";
+	public QDataset d;
 	
-	public RunLearningAlgorithmRankLib(ArrayList<Query> subset, int i)
+	public RunRandomTestingAlgorithmRankLib(ArrayList<Query> random, QDataset d) throws IOException
 	{
-		this.subset = subset;
-		//String[] args1 = {"--cmd=generate-bin", "--ranking", "--folder", "src/data/LETOR/", "--file", "train"+i+".txt", "--file", "valid.txt", "--file", "candidate.txt"};
-		String args1[] = {"-silent","-train", "src/data/LETOR/train"+i+".txt", "-test", "src/data/LETOR/candidate.txt", "-validate", "src/data/LETOR/valid.txt", "-ranker", "3", "-metric2t", "NDCG@10", "-metric2T", "NDCG@10", "-save", "src/data/LETOR/mymodel"+i+".txt"};
-		runAlgo(args1);
-		String args2[] = {"-silent","-load", "src/data/LETOR/mymodel"+i+".txt", "-rank", "src/data/LETOR/candidate.txt", "-score", "src/data/LETOR/predictions"+i+".txt"};
-		runAlgo(args2);
+		this.random = random;
+		this.listTestQueries = new ArrayList<Query>();
+		this.d = d;
+		System.out.println("\n\nThe system is now going to perform evaluation for "+random.size()+" number of queries");
+		
 		deleteBinFiles();
+		
+		populateTrainFiles();
+
+		try {
+			String args1[]={"-silent","-train", "src/data/LETOR/forEval/randomQ/forEval_random_train.txt", "-test", "src/data/LETOR/forEval/test.txt", "-validate", "src/data/LETOR/forEval/valid.txt", "-ranker", "3", "-metric2t", "NDCG@10", "-metric2T", "NDCG@10", "-save", "src/data/LETOR/forEval/randomQ/forEval_mymodel.txt"};
+			runAlgo(args1);
+			String args2[]={"-silent","-load", "src/data/LETOR/forEval/randomQ/forEval_mymodel.txt", "-rank", "src/data/LETOR/forEval/test.txt", "-score", "src/data/LETOR/forEval/randomQ/forEval_random_predictions.txt"};
+			runAlgo(args2);
+		} catch (Exception e) {e.printStackTrace();}
+		System.out.println("Running of the testing algorithm complete now...Computing NDGC now...");
+		// now we have the cores for all the documents for each query, we now need to calculate NDGC scores
+		populateTestScoresFromFile();
+		computeNDCG();
 	}
 	
 	public static void deleteBinFiles() {
 		File dir = new File("src/data/LETOR/forEval/");
-		for(File files: dir.listFiles()) {if((files.getName().contains(".bin") || files.getName().contains("jforest")) && (!files.getName().equalsIgnoreCase("test.bin"))) files.delete();}
+		for(File files: dir.listFiles()) {if((files.getName().contains(".bin") || files.getName().contains("jforest")) && (!files.getName().equalsIgnoreCase("test.bin")) && (!files.getName().equalsIgnoreCase("valid.bin"))) files.delete();}
 		
 		dir = new File("src/data/LETOR/");
 		for(File files: dir.listFiles()) {if(files.getName().contains(".bin") || files.getName().contains("jforest")) files.delete();}
 		
 		dir = new File("src/data/LETOR/forEval/randomQ/");
-		for(File files: dir.listFiles()) {if(files.getName().contains(".bin") || files.getName().contains("jforest")) files.delete();}
+		for(File files: dir.listFiles()) {/*if(files.getName().contains(".bin") || files.getName().contains("jforest"))*/ files.delete();}
 	}
 	
+	public void populateTestScoresFromFile()
+	{
+		BufferedReader br, br1;
+		try {
+			br = new BufferedReader(new FileReader(this.testFile));
+			br1 = new BufferedReader(new FileReader(this.predictionFile));
+			String line = br.readLine();
+			String line1 = br1.readLine();
+			
+			String prevQID = "";
+			Query q = new Query();
+			int c=0, nTQ=0;
+			Double testScore;
+			
+			while(line != null)
+			{
+				String qID = line.substring(6, line.indexOf(' ', line.indexOf(' ', 6)));
+				//System.out.println("WWR qID= "+qID);
+				testScore = Double.parseDouble(line1);
+				if(prevQID.compareTo(qID) != 0)
+				{
+					//System.out.println("new query found:"+prevQID+" "+qID);
+					// new query found
+					//first add previous query to the list of queries in the dataset
+					//listOfCandidateQueries[nTQ++] = q;
+					this.listTestQueries.add(q);
+					nTQ++;
+					c+=q.nD;
+					q = new Query();
+				}
+				prevQID = qID;
+				q.addDoc(line, testScore);
+				if(nTQ%1000 == 0) System.out.println(qID);
+				
+				line = br.readLine();
+				line1 = br1.readLine();
+			}
+			//listOfCandidateQueries[nTQ++] = q;
+			this.listTestQueries.add(q);
+			nTQ++;
+			//d.setListOfCandidateQueries(listOfCandidateQueries);
+			//d.setnTQ(nTQ);
+			//d.setCandidates(listOfCandidates);
+			//d.setnCandidateQ(nCQ);
+			c+= q.nD;
+			//for(int kk=0;kk<nCQ;kk++) System.out.println(listOfCandidates.get(kk).listOfDocuments.size());
+			System.out.println("No of test queries populated with their respective scores nCQ= "+nTQ);
+			System.out.println("cT= "+c);
+		} catch (FileNotFoundException e) {e.printStackTrace();} catch (IOException e) {e.printStackTrace();}
+	}
+	
+	public void computeNDCG() throws IOException
+	{
+		int thresNDGC = 10;
+		// sort the documents for each query in base
+		double avgNDCG=0.0;
+		double avgAP=0.0;
+		int totalCount=0, count4AP=0;
+		Iterator<Query> itr = this.listTestQueries.iterator();
+		FileWriter fstream1 = new FileWriter("src/data/LETOR/NDCG_RANDOM_errorBars.txt", true);
+		BufferedWriter out1 = new BufferedWriter(fstream1);
+		out1.write(d.base.size()+"\t");
+		FileWriter fstream2 = new FileWriter("src/data/LETOR/AP_RANDOM_errorBars.txt", true);
+		BufferedWriter out2 = new BufferedWriter(fstream2);
+		out2.write(d.base.size()+"\t");
+		while(itr.hasNext())
+		{
+			Query q = itr.next();
+			// now we need to sort the documents in this query based on the testScores they got
+			
+			
+			Collections.sort(q.listOfDocuments, new Comparator<Document>()  
+					{
+
+						public int compare(Document d1, Document d2) {
+							if(d1.testScore < d2.testScore) return 1;
+							else if(d1.testScore > d2.testScore) return -1;
+							else return 0;
+						}
+					  
+					});
+			Iterator<Document> itr3 = q.listOfDocuments.iterator();
+			int count = 0, count0 = 0, count1 = 0, count2 = 0;
+			while(itr3.hasNext())
+			{
+				Document d = itr3.next();
+				if(d.relevance == 0) count0++;
+				if(d.relevance == 1) count1++;
+				if(d.relevance == 2) count2++;
+			}
+			
+			
+			if(count1 == 0 && count2 == 0) ;
+			else
+			{
+				Iterator<Document> itr4 = q.listOfDocuments.iterator();
+				int relevant=0, count3=0, numRel=0;
+				double AP=0.0;
+				while(itr4.hasNext())
+				{
+					Document d = itr4.next();
+					count3++;
+					if(d.relevance > 0)
+					{
+						relevant++;
+						AP += (double) (relevant/count3);
+						numRel++;
+					}
+					//System.out.println("relevance for this doc: "+d.relevance+"score: "+d.testScore+" AP+= "+relevant+" / "+count3);
+					//if(count3 == 10) break;
+				}
+				System.out.println("AP: "+AP);
+				AP = AP/numRel;
+				q.AP = AP;
+				count4AP++;
+				avgAP += AP;
+				out2.write(AP+"\t");
+			}
+			
+			
+			
+			// now we have the documents for this query sorted
+			//System.out.print("qID:"+q.qID+"___");
+			Iterator<Document> itr2 = q.listOfDocuments.iterator();
+			double DCG=0.0, IDCG=0.0;
+			while(itr2.hasNext()){
+				Document d = itr2.next();
+				count++;
+				if(count==1) {DCG+= d.relevance;/*IDCG+= d.relevance;*/}
+				else
+				{
+					DCG+= (d.relevance/Math.log(count));
+				}
+				//System.out.print(d.relevance+" ~ "+d.testScore+"_______");
+				if(count == thresNDGC) break;
+			}
+			//calculate IDCG now
+			System.out.println("0s: "+count0+"1s: "+count1+"___2s: "+count2);
+			//calculate IDCG now
+			int c = 1;
+			while(count2>0 && c<=thresNDGC)
+			{
+				if(c==1) {IDCG+=2;System.out.print("IDCG+=2");}
+				else {IDCG+= (2/Math.log(c));System.out.print("  2/Math.log "+c);}
+				count2--;
+				c++;
+			}
+			while(count1>0 && c<=thresNDGC)
+			{
+				if(c==1) {IDCG+=1;System.out.print("IDCG+=2");}
+				else {IDCG+= (1/Math.log(c));System.out.print("  1/Math.log "+c);}
+				count1--;
+				c++;
+			}
+			/*int c = 2;
+			while(count2>0)
+			{
+				count2--;
+				IDCG+= (2/Math.log(c));
+				c++;
+			}
+			while(count1>0)
+			{
+				count1--;
+				IDCG+= (1/Math.log(c));
+				c++;
+			}*/
+			//System.out.print("qID:"+q.qID+"___DCG= "+DCG+" IDCG= "+IDCG+"_____");
+			double NDCG = DCG/IDCG;
+			q.NDCG = NDCG;
+			
+			if(NDCG>=0 && NDCG<=1)
+			{
+				avgNDCG += NDCG;totalCount++;
+				out1.write(NDCG+"\t");
+			}
+			//if(Double.isNaN(NDCG)) totalCount++;
+			//System.out.println("NDCG Score for Query "+q.qID+" is equal to "+q.NDCG);
+		}
+		out1.write("\n");
+		out1.close();
+		out2.write("\n");
+		out2.close();
+		System.out.println(avgNDCG);
+		avgNDCG = avgNDCG/totalCount;
+		avgAP = avgAP/count4AP;
+		d.resultRandom = avgNDCG;
+		d.resultRandomAP = avgAP;
+		
+		FileWriter fstream = new FileWriter("src/data/LETOR/forEval/resultsAT10.txt", true);
+		BufferedWriter out = new BufferedWriter(fstream);
+		out.write("avgNDCG for RANDOM training size of "+this.listTestQueries.size()+" queries= "+avgNDCG+"\n");
+		out.write("avgAP for RANDOM training size of "+d.base.size()+" queries= "+avgAP+"\n\n");
+		out.close();
+		System.out.println("================= Average NDGC score for a total of "+this.listTestQueries.size()+" = "+totalCount+" RANDOM queries: "+avgNDCG);
+	}
+	
+	public void populateTrainFiles() throws IOException {
+		System.out.println("Size of test collection= "+random.size());
+		//FileWriter fstream = new FileWriter("src/data/LETOR/forEval/forEval_train.txt");
+		FileWriter fstream = new FileWriter("src/data/LETOR/forEval/randomQ/forEval_random_train.txt");
+		BufferedWriter out = new BufferedWriter(fstream);
+		Iterator<Query> itr = random.iterator();
+		while(itr.hasNext())
+		{
+			Query q = itr.next();
+			int nD = q.nD;
+			Iterator<Document> itr2 = q.listOfDocuments.iterator();
+			while(itr2.hasNext())
+			{
+				Document d = itr2.next();
+				String s = d.docFeatures;
+				out.write(s+"\n");
+			}
+		}
+		out.close();
+		System.out.println("forEval_random_train file created with "+random.size()+" RANDOM queries");
+	}
+    
+    public static <T> List<T> randomSample(List<T> items, int m){
+		Random rnd = new Random();
+	    ArrayList<T> res = new ArrayList<T>(m);
+	    int visited = 0;
+	    Iterator<T> it = items.iterator();
+	    while (m > 0){
+	        T item = it.next();
+	        if (rnd.nextDouble() < ((double)m)/(items.size() - visited)){
+	            res.add(item);
+	            m--;
+	        }
+	        visited++;
+	    }
+	    System.out.println("Subset created with size-- "+res.size());
+	    return res;
+	}
+    
 public static void runAlgo(String[] args) {
 		
 		String[] rType = new String[]{"MART", "RankNet", "RankBoost", "AdaRank", "Coordinate Ascent", "LambdaRank", "LambdaMART", "ListNet", "Random Forests"};
