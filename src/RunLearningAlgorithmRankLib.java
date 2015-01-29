@@ -36,7 +36,7 @@ public class RunLearningAlgorithmRankLib {
 	{
 		this.subset = subset;
 		//String[] args1 = {"--cmd=generate-bin", "--ranking", "--folder", "src/data/LETOR/", "--file", "train"+i+".txt", "--file", "valid.txt", "--file", "candidate.txt"};
-		String args1[] = {"-silent","-train", "src/data/LETOR/train"+i+".txt", "-test", "src/data/LETOR/candidate.txt", "-validate", "src/data/LETOR/valid.txt", "-ranker", "3", "-metric2t", "NDCG@10", "-metric2T", "NDCG@10", "-save", "src/data/LETOR/mymodel"+i+".txt"};
+		String args1[] = {"-silent","-train", "src/data/LETOR/train"+i+".txt", "-test", "src/data/LETOR/candidate.txt", "-validate", "src/data/LETOR/valid.txt", "-ranker", "3", "-metric2t", "MAP"/*"NDCG@10"*/, "-metric2T", "NDCG@10", "-save", "src/data/LETOR/mymodel"+i+".txt"};
 		runAlgo(args1);
 		String args2[] = {"-silent","-load", "src/data/LETOR/mymodel"+i+".txt", "-rank", "src/data/LETOR/candidate.txt", "-score", "src/data/LETOR/predictions"+i+".txt"};
 		runAlgo(args2);

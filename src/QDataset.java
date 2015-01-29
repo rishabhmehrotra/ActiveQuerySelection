@@ -28,9 +28,11 @@ public class QDataset {
 	public int numTopics = 10;// if you change the numTopics here, make sure you change the size of topic proportion array in Query constructor
 	public ArrayList<Query> V;// the set of all queries, for submodular part: base+candidate list
 	
-	public int batchSize = 10;
-	public int limit = 1010;
+	//public int batchSize = 10;
+	public int batchSize = 5;
+	//public int limit = 1010;
 	//public int limit = 400;
+	public int limit = 64;
 
 	//public Query[] listOfCandidateQueries;
 	public int nCandidateQ;

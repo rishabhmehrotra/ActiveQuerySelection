@@ -53,8 +53,9 @@ public class Driver {
 		//System.exit(0);
 		
 		
-		int N = 50;
+		//int N = 50;
 		//int N = 37;
+		int N = 9;
 		
 		int i,j,k,l,m;
 		int sizeDl = d.base.size();
@@ -78,15 +79,18 @@ public class Driver {
 			prepareCandidateFile(d.candidates);
 			
 			// now that we have both the subsets, we have to train 2 models on these 2 subsets
-			/*if(temp==1) new RunLearningAlgorithm(d.subset1,1);
+			/*
+			if(temp==1) new RunLearningAlgorithm(d.subset1,1);
 			if(temp==1) new RunLearningAlgorithm(d.subset2,2);
 			if(temp==1) new RunLearningAlgorithm(d.subset3,3);
 			if(temp==1) new RunLearningAlgorithm(d.subset4,4);
 			*/
+			///*
 			if(temp==1) new RunLearningAlgorithmRankLib(d.subset1,1);
 			if(temp==1) new RunLearningAlgorithmRankLib(d.subset2,2);
 			if(temp==1) new RunLearningAlgorithmRankLib(d.subset3,3);
 			if(temp==1) new RunLearningAlgorithmRankLib(d.subset4,4);
+			//*/
 			// now we have both the models in the ensemble1/2.txt files, we need to measure the disagreement for each query among these 2 models
 			// the queries-doc pairs are present line by line in the test.txt file and corresponding lines in the predictions1/2.txt file contain the
 			// scores assigned by the models to each of these query-doc pairs..
@@ -98,7 +102,7 @@ public class Driver {
 			
 			int batch = d.batchSize;
 			if(temp==1) new QuerySimilarity(d);
-			//if(temp==1) new ELO(d);
+			if(temp==1) new ELO(d);
 			if(temp==1) new SubmodularAL(d); // this function will populate the f scores for each candidate query based on the submodular functions L+R
 			
 			
@@ -284,14 +288,14 @@ public class Driver {
 					d.nBase++;
 					removeQueryFromCandidateSet(next);
 				}*/
-				d.base.add(nextByPL);
+				//d.base.add(nextByPL);
 				//d.base.add(next);
-				//d.base.add(nextByFScore);
+				d.base.add(nextByFScore);
 				//d.base.add(nextByLDASim);
 				d.nBase++;
-				removeQueryFromCandidateSet(nextByPL);
+				//removeQueryFromCandidateSet(nextByPL);
 				//removeQueryFromCandidateSet(next);
-				//removeQueryFromCandidateSet(nextByFScore);
+				removeQueryFromCandidateSet(nextByFScore);
 				//removeQueryFromCandidateSet(nextByLDASim);
 				//System.out.println("maxLScore:"+maxLScore+" minLScore:"+minLScore);
 				//System.out.println("-------------------------------------------"+nextByLScore.nLScore+"_"+nextByLScore.nRScore);
@@ -308,8 +312,9 @@ public class Driver {
 			new RunTestingAlgorithmRankLib(d.base, d);
 			
 			// uncomment this part if yoi have to run the random part as well
+			/*
 			double avg = 0, avgAP=0;
-			for(int ii=0;ii<20;ii++)
+			for(int ii=0;ii<10;ii++)
 			{
 				File dir = new File("src/data/LETOR/forEval/randomQ/");
 				for(File files: dir.listFiles()) files.delete();
@@ -326,7 +331,7 @@ public class Driver {
 			out.write("Average NDCG for this run: "+avg+"\n");
 			out.write("Average AP for this run: "+avgAP+"\n");
 			out.close();
-			
+			*/
 		}
 		
 		
@@ -348,8 +353,9 @@ public class Driver {
 		if(p1 > p2 && p1 > p3 && p1 > p4) return p1;
 		if(p2 > p1 && p2 > p3 && p2 > p4) return p2;
 		if(p3 > p1 && p3 > p2 && p3 > p4) return p3;
-		if(p4 > p1 && p4 > p2 && p4 > p3) return p4;
-		return 0;
+		//if(p4 > p1 && p4 > p2 && p4 > p3) return p4;
+		else return p4;
+		//return 0;
 	}
 
 	public static void populateQueryTermsToLDAFile() throws IOException
@@ -369,6 +375,7 @@ public class Driver {
 			}
 			out.write("\n");
 		}
+		out.close();
 		System.out.println(c);
 	}
 	

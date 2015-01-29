@@ -6,9 +6,12 @@ public class CombineErrorBars {
 		//moveFile("src/data/LETOR/", "test.txt", "src/data/LETOR/forEval/results/");
 		//System.exit(0);
 		
-		//String algo = "topic_top10_PL";
+		//String algo = "ADARank_Random";
+		String algo = "FORAP_FScore4-6_";
 		//String algo = "FScoreWithNormalizedLR5-5_";
-		String algo = "FScoreWithNormalizedLR5-5_";
+		//String algo = "FScoreWithNormalizedLR5-5_";
+		//String algo = "ADARank_QBC";
+		//String algo = "FScoreWithNormalizedLR5-5_";
 		/*
 		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_B10_"+algo+"11.txt"));
 		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_B10_"+algo+"21.txt"));
@@ -16,13 +19,36 @@ public class CombineErrorBars {
 		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_B10_"+algo+"41.txt"));
 		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_B10_"+algo+"51.txt"));
 		*/
+		/*
 		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_"+algo+"11.txt"));
 		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_"+algo+"21.txt"));
 		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_"+algo+"31.txt"));
 		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_"+algo+"41.txt"));
 		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_errorBars_"+algo+"51.txt"));
-		
-		/*BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_RANDOM_errorBars_B10_"+algo+"1.txt"));
+		*/
+		/*
+		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_B10_"+algo+"11.txt"));
+		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_B10_"+algo+"21.txt"));
+		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_B10_"+algo+"31.txt"));
+		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_B10_"+algo+"41.txt"));
+		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_B10_"+algo+"51.txt"));
+		*/
+		/*
+		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_RANDOM_errorBars_B10_"+algo+"11.txt"));
+		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_RANDOM_errorBars_B10_"+algo+"21.txt"));
+		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_RANDOM_errorBars_B10_"+algo+"31.txt"));
+		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_RANDOM_errorBars_B10_"+algo+"41.txt"));
+		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_RANDOM_errorBars_B10_"+algo+"51.txt"));
+		*/
+		/*
+		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_"+algo+"11.txt"));
+		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_"+algo+"21.txt"));
+		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_"+algo+"31.txt"));
+		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_"+algo+"41.txt"));
+		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_errorBars_"+algo+"51.txt"));
+		*/
+		/*
+		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_RANDOM_errorBars_B10_"+algo+"1.txt"));
 		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_RANDOM_errorBars_B10_"+algo+"2.txt"));
 		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_RANDOM_errorBars_B10_"+algo+"3.txt"));
 		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/NDCG_RANDOM_errorBars_B10_"+algo+"4.txt"));
@@ -44,13 +70,14 @@ public class CombineErrorBars {
 		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/NDCG_errorBars_"+algo+"41.txt"));
 		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/NDCG_errorBars_"+algo+"51.txt"));
 		*/
-		
-		/*BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"1.txt"));
-		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"2.txt"));
-		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"3.txt"));
-		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"4.txt"));
-		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"5.txt"));
-		
+		/*
+		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"11.txt"));
+		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"21.txt"));
+		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"31.txt"));
+		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"41.txt"));
+		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"51.txt"));
+		*/
+		/*
 		BufferedReader br12=null;
 		if(algo.compareTo("LDA")==0) br12 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_errorBars_"+algo+"12.txt"));
 		BufferedReader br13=null;
@@ -65,18 +92,31 @@ public class CombineErrorBars {
 		BufferedReader br12 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Fold1/NDCG_RANDOM_errorBars_LDA12.txt"));
 		BufferedReader br13 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Fold1/NDCG_RANDOM_errorBars_LDA13.txt"));
 		*/
-		
-		/*BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_RANDOM_errorBars_"+algo+"1.txt"));
+		/*
+		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_RANDOM_errorBars_"+algo+"1.txt"));
 		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_RANDOM_errorBars_"+algo+"2.txt"));
 		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_RANDOM_errorBars_"+algo+"3.txt"));
 		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_RANDOM_errorBars_"+algo+"4.txt"));
 		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_RANDOM_errorBars_"+algo+"5.txt"));
-		
+		*/
+		/*
 		BufferedReader br12=null;
 		if(algo.compareTo("LDA")==0) br12 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_RANDOM_errorBars_"+algo+"12.txt"));
 		BufferedReader br13=null;
 		if(algo.compareTo("LDA")==0) br13 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_RANDOM_errorBars_"+algo+"13.txt"));
 		*/
+		/*
+		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/NDCG_errorBars_"+algo+"11.txt"));
+		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/NDCG_errorBars_"+algo+"21.txt"));
+		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/NDCG_errorBars_"+algo+"31.txt"));
+		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/NDCG_errorBars_"+algo+"41.txt"));
+		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/NDCG_errorBars_"+algo+"51.txt"));
+		*/
+		BufferedReader br1 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/AP_errorBars_"+algo+"11.txt"));
+		BufferedReader br2 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/AP_errorBars_"+algo+"21.txt"));
+		BufferedReader br3 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/AP_errorBars_"+algo+"31.txt"));
+		BufferedReader br4 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/AP_errorBars_"+algo+"41.txt"));
+		BufferedReader br5 = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/AP_errorBars_"+algo+"51.txt"));
 		
 		String line1 = br1.readLine();
 		String line2 = br2.readLine();
@@ -91,8 +131,13 @@ public class CombineErrorBars {
 		
 		//FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_"+algo);
 		//FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/2007MQ/Combined/COMBINED_RANDOM");
-		FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/2007MQ/Combined/COMBINED_"+algo);
+		//FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/2007MQ/Combined/COMBINED_"+algo);
+		//FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/2007MQ/Combined/AP_COMBINED_"+algo);
+		//FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/2007MQ/Combined/AP_COMBINED_RANDOM");
+		//FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/2008MQ/Combined/AP_COMBINED_"+algo);
 		//FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/2008MQ/Combined/AP_COMBINED_RANDOM");
+		//FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/OHSUMED/Combined/COMBINED_"+algo);
+		FileWriter fstream = new FileWriter("src/data/LETOR/forEval/results/OHSUMED/Combined/COMBINED_AP_"+algo);
 		BufferedWriter out = new BufferedWriter(fstream);
 		int cc = 0;
 		while(line1!=null || line2!=null || line3!=null || line4!=null || line5!=null)

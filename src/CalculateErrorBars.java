@@ -18,8 +18,15 @@ public class CalculateErrorBars {
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Fold4/NDCG_errorBars_PL41.txt"));
 		
 		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_FScoreWithNormalizedLR5-5_"));
-		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_LDA_AGAIN"));
-		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/COMBINED_FScoreWithNormalizedLR5-5_"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/COMBINED_ADARank_RANDOMMM"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/COMBINED_FScoreWithNormalizedLR5-5_"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/COMBINED_ADARANK_QBC"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_COMBINED_RANDOM"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2008MQ/Combined/AP_COMBINED_FORAP_FScore_1-9_"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/2007MQ/Combined/AP_COMBINED_FORAP_Random"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/COMBINED_Random"));
+		//BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/COMBINED_ADARank_FScore1-9_"));
+		BufferedReader br = new BufferedReader(new FileReader("src/data/LETOR/forEval/results/OHSUMED/Combined/COMBINED_AP_FORAP_QBC"));
 		String line = br.readLine();
 		//line = line+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1)+line.substring(line.indexOf('.')-1);
 		//System.out.println(line);
